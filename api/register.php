@@ -2,16 +2,24 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 require '../config/config.php';
-require_once '../vendor/autoload.php';
 $date   = new DateTimeImmutable();
 
-$request = file_get_contents("php://input");
 
-$request = json_decode($request);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $request = file_get_contents("php://input");
+    $request = json_decode($request);
 
+
+    $name = $request->name;
+    $email = $request->email;
+    $mobile = $request->mobile;
+    
+
+
+ 
+    
 $request_data = [
     'iat'  => $date->getTimestamp(),
-    'iss'  => $domainName,
     'userName' => 'myUsername',
 ];
 
@@ -20,9 +28,11 @@ $token = JWT::encode(
     $secret_Key,
     'HS512'
 );
+}else{
+    echo json_encode(["success" => false, "msg" => "Method not allowed"]);
+}
 
 
-$data = JWT::decode($token, new Key($secret_Key, 'HS512'));
+// $data = JWT::decode($token, new Key($secret_Key, 'HS512'));
 
 
-echo json_encode(["success" => true, "token" => $token]);
