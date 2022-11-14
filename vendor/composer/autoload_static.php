@@ -7,9 +7,13 @@ namespace Composer\Autoload;
 class ComposerStaticInit6b5029092ce0884925a5854ae9087a65
 {
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'R' => 
         array (
-            'Symfony\\Component\\Dotenv\\' => 25,
+            'Rakit\\Validation\\' => 17,
+        ),
+        'O' => 
+        array (
+            'Opis\\Database\\' => 14,
         ),
         'F' => 
         array (
@@ -18,9 +22,13 @@ class ComposerStaticInit6b5029092ce0884925a5854ae9087a65
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Component\\Dotenv\\' => 
+        'Rakit\\Validation\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/dotenv',
+            0 => __DIR__ . '/..' . '/rakit/validation/src',
+        ),
+        'Opis\\Database\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/opis/database/src',
         ),
         'Firebase\\JWT\\' => 
         array (
