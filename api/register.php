@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => true, "msg" => $errors->firstOfAll()]);
+        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
         exit;
     }
 
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $avatar = "https://api.multiavatar.com/stefan.svg";
     
     // creating new user
-    $result = DB->insert(array(
+    $result = $db->insert(array(
         'first_name' => $request->first_name,
         'last_name' => $request->last_name,
         'address' => $request->address,
