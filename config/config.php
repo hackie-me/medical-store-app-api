@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/nms/vendor/autoload.php';
 header("Content-type: application/json");
 
 // including namespaces 
@@ -14,6 +14,7 @@ define("DB_PASSWORD", '');
 define("DB_DATABASE", 'nms');
 define("SECRET_KEY", 'nRM8jRhKCN0EZVs1uh3RRVgbnMSjOzfvenPxDp2cGhxqkMr45Evxf4SuDqGnxqSr');
 define("DOMAIN_NAME", 'www.nilkanth-medical-store.com');
+$date   = new DateTimeImmutable();
 
 try {
     // New connection of database 

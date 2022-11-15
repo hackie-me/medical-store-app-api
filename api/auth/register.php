@@ -4,8 +4,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
 
-require '../config/config.php';
-$date   = new DateTimeImmutable();
+require '../../config/config.php';
 $validator = new Validator;
 
 
@@ -39,9 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Getting users file 
-    $avatar = "https://api.multiavatar.com/stefan.svg";
-    
+    // checking that data is unique or not 
+    $uniq = $db->from('users')
+        ->where('phone')->is($request->phone)
+        ->orWhere('email')->is($request->email)
+        ->orWhere('username')->is($request->username)
+        ->select()
+        ->count();
+        
+    if($uniq > 0){
+        echo json_encode(["success" => false, "msg" => "user already exist"]);
+        exit;
+    }
+
     // creating new user
     $result = $db->insert(array(
         'first_name' => $request->first_name,
@@ -54,27 +63,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'username' => $request->username,
         'email' => $request->email,
         'mail_hash' => hash('md5', $request->email),
-        'password' => password_hash($request->password, PASSWORD_BCRYPT),
-        'avatar' => $avatar,
+        'password' => password_hash($request->password, PASSWORD_BCRYPT)
     ))->into('users');
 
-    $request_data = [
-        'iat'  => $date->getTimestamp(),
-    ];
+    // Getting user info 
+    $result = $db->from('users')
+        ->where('phone')->is($request->phone)->select()
+        ->first();
+    if ($request == true) {
+        // generating new auth token 
+        $request_data = [
+            'iat'  => $date->getTimestamp(),
+            'data' => $result
+        ];
+        $token = JWT::encode(
+            $request_data,
+            SECRET_KEY,
+            'HS512'
+        );
 
-    // generating new auth token 
-    $token = JWT::encode(
-        $request_data,
-        SECRET_KEY,
-        'HS512'
-    );
-
-    // sending response 
-    echo json_encode(["success" => true, "token" => $token]);
-
+        // Updating user
+        $result = $db->update('users')
+            ->where('userid')->is($result->userid)
+            ->set(array(
+                'remember_token' => $token
+            ));
+        // sending response 
+        echo json_encode(["status" => true, "token" => $token]);
+    }
 } else {
-    echo json_encode(["success" => false, "msg" => "Method not allowed"]);
+    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
 }
-
-
-// $data = JWT::decode($token, new Key($secret_Key, 'HS512'));
