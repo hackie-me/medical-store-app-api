@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 16, 2022 at 07:11 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Host: 127.0.0.1:3306
+-- Generation Time: Nov 16, 2022 at 12:54 PM
+-- Server version: 8.0.27
+-- PHP Version: 8.1.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,22 +27,25 @@ SET time_zone = "+00:00";
 -- Table structure for table `admin`
 --
 
-CREATE TABLE `admin` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `phone` varchar(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `admin`
 --
 
 INSERT INTO `admin` (`id`, `name`, `phone`, `email`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'New Hardik', '9909520639', 'hardik@maill.com', '$2y$10$jLM7x.Ub1f5ahUHg3a4fH.p98tzmesHPwmmBLEBDoZYUQ.okOoTpq', '2022-11-16 04:07:57', '2022-11-16 04:07:57');
+(1, 'New Hardik', '9909520639', 'hardik@maill.com', '$2y$10$jLM7x.Ub1f5ahUHg3a4fH.p98tzmesHPwmmBLEBDoZYUQ.okOoTpq', '2022-11-16 04:07:57', '2022-11-16 04:07:57'),
+(2, 'yash', 'Kanajariya', 'yash@mail.com', '$2y$10$6RloSHDQkRk714fxH6JppeeKNvj8dXfzxvfo.8L6N5PCGhG7MGklq', '2022-11-16 10:04:22', '2022-11-16 10:04:22');
 
 -- --------------------------------------------------------
 
@@ -50,10 +53,23 @@ INSERT INTO `admin` (`id`, `name`, `phone`, `email`, `password`, `created_at`, `
 -- Table structure for table `category`
 --
 
-CREATE TABLE `category` (
-  `id` int(11) NOT NULL,
-  `name` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+DROP TABLE IF EXISTS `category`;
+CREATE TABLE IF NOT EXISTS `category` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `name`) VALUES
+(1, 'category 1'),
+(3, '0'),
+(4, '0'),
+(5, 'something'),
+(6, 'hardik');
 
 -- --------------------------------------------------------
 
@@ -61,9 +77,11 @@ CREATE TABLE `category` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
+  `price` varchar(255) NOT NULL DEFAULT '0',
   `mrp` varchar(100) NOT NULL DEFAULT '0',
   `discount` varchar(100) NOT NULL DEFAULT '0',
   `quntity` varchar(100) NOT NULL,
@@ -72,11 +90,11 @@ CREATE TABLE `products` (
   `thumbnail` longtext NOT NULL,
   `images` longtext NOT NULL,
   `ingrediants` text NOT NULL,
-  `rating` int(11) NOT NULL DEFAULT 0,
-  `category_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `category_id` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -84,8 +102,9 @@ CREATE TABLE `products` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `userid` bigint(20) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `userid` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `first_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -101,68 +120,20 @@ CREATE TABLE `users` (
   `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `social_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `avatar` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'https://api.multiavatar.com/stefan.svg',
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`userid`),
+  UNIQUE KEY `users_username_unique` (`username`),
+  UNIQUE KEY `users_email_unique` (`email`),
+  UNIQUE KEY `users_mail_hash_unique` (`mail_hash`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Indexes for dumped tables
+-- Dumping data for table `users`
 --
 
---
--- Indexes for table `admin`
---
-ALTER TABLE `admin`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `category`
---
-ALTER TABLE `category`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`userid`),
-  ADD UNIQUE KEY `users_username_unique` (`username`),
-  ADD UNIQUE KEY `users_email_unique` (`email`),
-  ADD UNIQUE KEY `users_mail_hash_unique` (`mail_hash`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `admin`
---
-ALTER TABLE `admin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `category`
---
-ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `products`
---
-ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `userid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+INSERT INTO `users` (`userid`, `first_name`, `last_name`, `address`, `city`, `state`, `zip`, `phone`, `username`, `status`, `email`, `mail_hash`, `email_verified_at`, `password`, `social_id`, `avatar`, `created_at`, `updated_at`) VALUES
+(1, 'updated yash', 'Kanajariya', 'kalyanpur', 'jamanagar', 'gujarat', '361320', '9909520639', 'newyash', 'pending', 'newyash@mail.com', '52f78afeadcc3de04f693224d3dd0116', NULL, '$2y$10$wHlWvtJy.25LAoOboqce0u0OhQItv3d5lh5DD0xQ5FokX0Nghn1Ue', NULL, 'https://api.multiavatar.com/stefan.svg', '2022-11-16 08:49:41', '2022-11-16 08:49:41');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
