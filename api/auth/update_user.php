@@ -1,25 +1,17 @@
 <?php
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
 
 require '../../config/config.php';
 $validator = new Validator;
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Authenticating user  
-    $request = apache_request_headers();
-    $token = explode(" ", $request['Authorization']);
-    $token = $token[1]; 
-    $authUser = JWT::decode($token, new Key(SECRET_KEY, 'HS512'));
-    $authUser = (array)$authUser->data[0];
+    // verifying auth token 
+    $user = $fun->verify_token();
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
-
     // request validator  
     $validation = $validator->make((array)$request, [
         'first_name' => 'required',
@@ -28,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'city' => 'required',
         'state' => 'required',
         'zip' => 'required|min:6',
-        'phone' => 'required',
+        'phone' => 'required|min:10|max:10',
         'email' => 'required|email',
         'username' => 'required',
     ]);
@@ -45,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Updating user
     $result = $db->update('users')
-        ->where('userid')->is($authUser['userid'])
+        ->where('userid')->is($user['userid'])
         ->set(array(
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -64,17 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ->first();
 
     // generating new auth token 
-    if ($request == true) {
+    if ($result == true) {
         // generating new auth token 
-        $request_data = [
-            'iat'  => $date->getTimestamp(),
-            'data' => $result
-        ];
-        $token = JWT::encode(
-            $request_data,
-            SECRET_KEY,
-            'HS512'
-        );
+        $token = $fun->generate_token($result);
+
         // sending response 
         echo json_encode(["status" => true, "token" => $token]);
     }

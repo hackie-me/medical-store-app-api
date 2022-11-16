@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // request validator 
     $validation = $validator->make((array)$request, [
         'name' => 'required',
-        'phone' => 'required',
+        'phone' => 'required|min:10|max:10',
         'email' => 'required|email',
         'password' => 'required|min:6',
         'confirm_password' => 'required|same:password'
@@ -28,6 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        exit;
+    }
+
+    // checking that data is unique or not 
+    $uniq = $db->from('admin')
+        ->where('phone')->is($request->phone)
+        ->orWhere('email')->is($request->email)
+        ->select()
+        ->count();
+
+    if ($uniq > 0) {
+        echo json_encode(["success" => false, "msg" => "admin already exist"]);
         exit;
     }
 
@@ -46,15 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ->first();
 
     // generating new auth token 
-    $request_data = [
-        'iat'  => $date->getTimestamp(),
-        'data' => $result
-    ];
-    $token = JWT::encode(
-        $request_data,
-        SECRET_KEY,
-        'HS512'
-    );
+    $token = $fun->generate_token($result);
     // sending response 
     echo json_encode(["status" => true, "token" => $token]);
 } else {

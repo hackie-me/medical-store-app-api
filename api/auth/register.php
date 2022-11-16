@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'city' => 'required',
         'state' => 'required',
         'zip' => 'required|min:6',
-        'phone' => 'required',
+        'phone' => 'required|min:10|max:10',
         'email' => 'required|email',
         'username' => 'required',
         'password' => 'required|min:6',
@@ -72,22 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ->first();
     if ($request == true) {
         // generating new auth token 
-        $request_data = [
-            'iat'  => $date->getTimestamp(),
-            'data' => $result
-        ];
-        $token = JWT::encode(
-            $request_data,
-            SECRET_KEY,
-            'HS512'
-        );
-
-        // Updating user
-        $result = $db->update('users')
-            ->where('userid')->is($result->userid)
-            ->set(array(
-                'remember_token' => $token
-            ));
+        $token = $fun->generate_token($result);
         // sending response 
         echo json_encode(["status" => true, "token" => $token]);
     }

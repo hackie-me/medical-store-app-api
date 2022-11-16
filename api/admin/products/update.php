@@ -1,7 +1,5 @@
 <?php
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
 
 require '../../../config/config.php';
@@ -10,6 +8,7 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    // Authenticating user  
     $user = $fun->verify_token();
 
     $request = file_get_contents("php://input");
@@ -17,9 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator 
     $validation = $validator->make((array)$request, [
+        'id' => 'required|integer',
         'name' => 'required',
-        'phone' => 'required|min:10|max:10',
-        'email' => 'required|email',
     ]);
 
     $validation->validate();
@@ -31,27 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-
-    // Updating user
-    $result = $db->update('admin')
-        ->where('id')->is($user['id'])
+    // inserting records into database 
+    try {
+        $result = $db->update('category')
+        ->where('id')->is($request->id)
         ->set(array(
             'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
         ));
-
-    // Getting user info 
-    $result = $db->from('admin')
-        ->where('phone')->is($request->phone)->select()
-        ->first();
-
-    // generating new auth token 
-    if ($result == true) {
-        // generating new auth token 
-        $token = $fun->generate_token($result);
-        // sending response 
-        echo json_encode(["status" => true, "token" => $token]);
+        echo json_encode(["status" => true, "msg" => "category updated"]);
+    } catch (Exception $ex) {
+        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        die();
     }
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);

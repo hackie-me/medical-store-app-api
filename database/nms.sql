@@ -2,10 +2,10 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Nov 15, 2022 at 06:28 PM
--- Server version: 8.0.27
--- PHP Version: 8.1.0
+-- Host: 127.0.0.1
+-- Generation Time: Nov 16, 2022 at 07:11 AM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,17 +27,56 @@ SET time_zone = "+00:00";
 -- Table structure for table `admin`
 --
 
-DROP TABLE IF EXISTS `admin`;
-CREATE TABLE IF NOT EXISTS `admin` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `phone` varchar(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `name`, `phone`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(1, 'New Hardik', '9909520639', 'hardik@maill.com', '$2y$10$jLM7x.Ub1f5ahUHg3a4fH.p98tzmesHPwmmBLEBDoZYUQ.okOoTpq', '2022-11-16 04:07:57', '2022-11-16 04:07:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL,
+  `name` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `mrp` varchar(100) NOT NULL DEFAULT '0',
+  `discount` varchar(100) NOT NULL DEFAULT '0',
+  `quntity` varchar(100) NOT NULL,
+  `brannd_name` varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
+  `expiry_date` date NOT NULL,
+  `thumbnail` longtext NOT NULL,
+  `images` longtext NOT NULL,
+  `ingrediants` text NOT NULL,
+  `rating` int(11) NOT NULL DEFAULT 0,
+  `category_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -45,9 +84,8 @@ CREATE TABLE IF NOT EXISTS `admin` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `userid` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `userid` bigint(20) UNSIGNED NOT NULL,
   `first_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -63,21 +101,68 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `social_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `avatar` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'https://api.multiavatar.com/stefan.svg',
-  `remember_token` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`userid`),
-  UNIQUE KEY `users_username_unique` (`username`),
-  UNIQUE KEY `users_email_unique` (`email`),
-  UNIQUE KEY `users_mail_hash_unique` (`mail_hash`)
-) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
+-- Indexes for dumped tables
 --
 
-INSERT INTO `users` (`userid`, `first_name`, `last_name`, `address`, `city`, `state`, `zip`, `phone`, `username`, `status`, `email`, `mail_hash`, `email_verified_at`, `password`, `social_id`, `avatar`, `remember_token`, `created_at`, `updated_at`) VALUES
-(56, 'yash', 'Kanajariya', 'kalyanpur', 'jamanagar', 'gujarat', '361320', '95105d22501', 'yadsh', 'pending', 'yasdh@mail.com', '52f78afeadcc3de04f693224d3dd0116', NULL, '$2y$10$zN512wNd/9Bw8zUCDp2UNOwhw/kA1nFyw0CxhZ1ZhRq.5llv50GWS', NULL, 'https://api.multiavatar.com/stefan.svg', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Njg1MjI1MjgsImRhdGEiOnsidXNlcmlkIjo1NiwiZmlyc3RfbmFtZSI6Inlhc2giLCJsYXN0X25hbWUiOiJLYW5hamFyaXlhIiwiYWRkcmVzcyI6ImthbHlhbnB1ciIsImNpdHkiOiJqYW1hbmFnYXIiLCJzdGF0ZSI6Imd1amFyYXQiLCJ6aXAiOiIzNjEzMjAiLCJwaG9uZSI6Ijk1MTA1ZDIyNTAxIiwidXNlcm5hbWUiOiJ5YWRzaCIsInN0YXR1cyI6InBlbmRpbmciLCJlbWFpbCI6Inlhc2RoQG1haWwuY29tIiwibWFpbF9oYXNoIjoiNTJmNzhhZmVhZGNjM2RlMDRmNjkzMjI0ZDNkZDAxMTYiLCJlbWFpbF92ZXJpZmllZF9hdCI6bnVsbCwicGFzc3dvcmQiOiIkMnkkMTAkek41MTJ3TmQvOUJ3OHpVQ0RwMlVOT3dody9rQTFuRnl3MEN4aFoxWmhScS41bGx2NTBHV1MiLCJzb2NpYWxfaWQiOm51bGwsImF2YXRhciI6Imh0dHBzOi8vYXBpLm11bHRpYXZhdGFyLmNvbS9zdGVmYW4uc3ZnIiwicmVtZW1iZXJfdG9rZW4iOiIiLCJjcmVhdGVkX2F0IjoiMjAyMi0xMS0xNSAxOTo1ODo0OCIsInVwZGF0ZWRfYXQiOiIyMDIyLTExLTE1IDE5OjU4OjQ4In19.9GwCXNOxvjRmHO49QQeLidCJ4kCu9eHAgU4NE4111yFogDutPkm7TDEI3jtg1DrS-W_Vj0ys5_JLCULa86WdWA', '2022-11-15 14:28:48', '2022-11-15 14:28:48');
+--
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`userid`),
+  ADD UNIQUE KEY `users_username_unique` (`username`),
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD UNIQUE KEY `users_mail_hash_unique` (`mail_hash`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `userid` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

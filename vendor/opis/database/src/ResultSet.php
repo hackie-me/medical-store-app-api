@@ -49,7 +49,7 @@ class ResultSet
      *
      * @return  int
      */
-    public function count()
+    public function count() 
     {
         return $this->statement->rowCount();
     }
@@ -62,9 +62,9 @@ class ResultSet
      *
      * @return  array
      */
-    public function all($callable = null, $fetchStyle = 0)
+    public function all($callable = null, $fetchStyle = PDO::FETCH_ASSOC)
     {
-        if ($callable === null) {
+        if ($callable === null) { 
             return $this->statement->fetchAll($fetchStyle);
         }
         return $this->statement->fetchAll($fetchStyle | PDO::FETCH_FUNC, $callable);
