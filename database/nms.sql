@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 16, 2022 at 12:54 PM
+-- Generation Time: Nov 16, 2022 at 06:33 PM
 -- Server version: 8.0.27
 -- PHP Version: 8.1.0
 
@@ -74,6 +74,23 @@ INSERT INTO `category` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `offers`
+--
+
+DROP TABLE IF EXISTS `offers`;
+CREATE TABLE IF NOT EXISTS `offers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `image` longtext NOT NULL,
+  `discount` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `products`
 --
 
@@ -95,6 +112,32 @@ CREATE TABLE IF NOT EXISTS `products` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review`
+--
+
+DROP TABLE IF EXISTS `review`;
+CREATE TABLE IF NOT EXISTS `review` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `uid` int NOT NULL,
+  `pid` int NOT NULL,
+  `name` text NOT NULL,
+  `msg` mediumtext NOT NULL,
+  `rating` int DEFAULT '0',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `review`
+--
+
+INSERT INTO `review` (`id`, `uid`, `pid`, `name`, `msg`, `rating`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'yashKanajariya', 'dummy review updated', 5, '2022-11-16 15:31:49', '2022-11-16 15:31:49');
 
 -- --------------------------------------------------------
 

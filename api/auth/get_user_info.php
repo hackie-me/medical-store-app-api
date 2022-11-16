@@ -3,7 +3,7 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-require '../config/config.php';
+require '../../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $data = $fun->verify_token();

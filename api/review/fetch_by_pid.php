@@ -1,23 +1,22 @@
+
 <?php
 
 use Rakit\Validation\Validator;
 
-require '../../../config/config.php';
+require '../../config/config.php';
 $validator = new Validator;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    $user = $fun->verify_token();
-
+    $fun->verify_token();
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
     // request validator 
     $validation = $validator->make((array)$request, [
-        'id' => 'required|integer',
-        'name' => 'required',
+        'pid' => 'required',
     ]);
 
     $validation->validate();
@@ -28,19 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
         exit;
     }
-
-    // inserting records into database 
-    try {
-        $result = $db->update('category')
-        ->where('id')->is($request->id)
-        ->set(array(
-            'name' => $request->name,
-        ));
-        echo json_encode(["status" => true, "msg" => "category updated"]);
-    } catch (Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
-        die();
-    }
+    // fetching review by product id  
+    $data = $db->from('review')->where('pid')->is($request->pid)->select()->all();
+    echo json_encode(["status" => true, "data" => $data]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
 }

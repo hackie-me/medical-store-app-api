@@ -1,8 +1,5 @@
 <?php
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use Opis\Database\SQL\Where;
 use Rakit\Validation\Validator;
 
 require '../../../config/config.php';
@@ -12,17 +9,8 @@ $validator = new Validator;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    try {
-        $request = apache_request_headers();
-        $token = explode(" ", $request['Authorization']);
-        $token = $token[1];
-        $authUser = JWT::decode($token, new Key(SECRET_KEY, 'HS512'));
-        $authUser = (array)$authUser->data;
-    } catch (\Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
-        die();
-    }
-
+    $user = $fun->verify_token();
+    
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 

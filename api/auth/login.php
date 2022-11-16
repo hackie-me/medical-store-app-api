@@ -1,7 +1,5 @@
 <?php
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
 
 require '../../config/config.php';

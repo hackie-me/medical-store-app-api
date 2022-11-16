@@ -1,0 +1,119 @@
+[
+    {
+        "type": "header",
+        "version": "5.2.0",
+        "comment": "Export to JSON plugin for PHPMyAdmin"
+    },
+    {
+        "type": "database",
+        "name": "nms"
+    },
+    {
+        "type": "table",
+        "name": "admin",
+        "database": "nms",
+        "data": [
+            {
+                "id": "1",
+                "name": "New Hardik",
+                "phone": "9909520639",
+                "email": "hardik@maill.com",
+                "password": "$2y$10$jLM7x.Ub1f5ahUHg3a4fH.p98tzmesHPwmmBLEBDoZYUQ.okOoTpq",
+                "created_at": "2022-11-16 09:37:57",
+                "updated_at": "2022-11-16 09:37:57"
+            },
+            {
+                "id": "2",
+                "name": "yash",
+                "phone": "Kanajariya",
+                "email": "yash@mail.com",
+                "password": "$2y$10$6RloSHDQkRk714fxH6JppeeKNvj8dXfzxvfo.8L6N5PCGhG7MGklq",
+                "created_at": "2022-11-16 15:34:22",
+                "updated_at": "2022-11-16 15:34:22"
+            }
+        ]
+    },
+    {
+        "type": "table",
+        "name": "category",
+        "database": "nms",
+        "data": [
+            {
+                "id": "1",
+                "name": "category 1"
+            },
+            {
+                "id": "3",
+                "name": "0"
+            },
+            {
+                "id": "4",
+                "name": "0"
+            },
+            {
+                "id": "5",
+                "name": "something"
+            },
+            {
+                "id": "6",
+                "name": "hardik"
+            }
+        ]
+    },
+    {
+        "type": "table",
+        "name": "offers",
+        "database": "nms",
+        "data": []
+    },
+    {
+        "type": "table",
+        "name": "products",
+        "database": "nms",
+        "data": []
+    },
+    {
+        "type": "table",
+        "name": "review",
+        "database": "nms",
+        "data": [
+            {
+                "id": "1",
+                "uid": "1",
+                "pid": "1",
+                "name": "yashKanajariya",
+                "msg": "dummy review updated",
+                "rating": "5",
+                "created_at": "2022-11-16 21:01:49",
+                "updated_at": "2022-11-16 21:01:49"
+            }
+        ]
+    },
+    {
+        "type": "table",
+        "name": "users",
+        "database": "nms",
+        "data": [
+            {
+                "userid": "1",
+                "first_name": "updated yash",
+                "last_name": "Kanajariya",
+                "address": "kalyanpur",
+                "city": "jamanagar",
+                "state": "gujarat",
+                "zip": "361320",
+                "phone": "9909520639",
+                "username": "newyash",
+                "status": "pending",
+                "email": "newyash@mail.com",
+                "mail_hash": "52f78afeadcc3de04f693224d3dd0116",
+                "email_verified_at": null,
+                "password": "$2y$10$wHlWvtJy.25LAoOboqce0u0OhQItv3d5lh5DD0xQ5FokX0Nghn1Ue",
+                "social_id": null,
+                "avatar": "https:\/\/api.multiavatar.com\/stefan.svg",
+                "created_at": "2022-11-16 14:19:41",
+                "updated_at": "2022-11-16 14:19:41"
+            }
+        ]
+    }
+]
