@@ -8,7 +8,7 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Authenticating user  
+    // Authenticating user   
     $user = $fun->verify_token();
 
     $request = file_get_contents("php://input");

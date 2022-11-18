@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting category from database  
+    // deleting offers from database  
     try {
         $db->from('offers')->Where("id")->is($request->id)->delete();
         echo json_encode(["status" => true, "msg" => "Offer Deleted"]);

@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // updating review
-    $result = $db->update('review')
+    // updating offers
+    $result = $db->update('offers')
         ->where('uid')->is($user['userid'])
         ->andWhere('pid')->is($request->pid)
         ->set(array(

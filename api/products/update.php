@@ -18,6 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $validation = $validator->make((array)$request, [
         'id' => 'required|integer',
         'name' => 'required',
+        'price' => 'required',
+        'mrp' => 'required',
+        'discount' => 'required',
+        'quantity' => 'required',
+        'brand_name' => 'required',
+        'expiry_date' => 'required|date:d-m-Y',
+        'thumbnail' => 'required|extension:0,500K,png,jpeg',
+        'images.*' => 'required|array',
+        'images.*' => 'required|uploaded_file:0,500K,png,jpeg',
+        'ingredients' => 'required',
     ]);
 
     $validation->validate();
@@ -31,10 +41,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // updating products  
     try {
-        $result = $db->update('category')
+        $result = $db->update('products')
         ->where('id')->is($request->id)
         ->set(array(
             'name' => $request->name,
+            'price' => $request->price,
+            'mrp' => $request->mrp,
+            'discount' => $request->discount,
+            'quantity' => $request->quantity,
+            'brand_name' => $request->brand_name != null ? $request->brand_name : 'Nilkanth Medical',
+            'expiry_data' => $request->expiry_date,
+            'thumbnail' => base64_encode($request->thumbnail),
+            'images' => $request->images,
+            'ingredients' => $request->ingredients,
         ));
         echo json_encode(["status" => true, "msg" => "category updated"]);
     } catch (Exception $ex) {

@@ -30,9 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // deleting category from database  
     try {
-        $db->from('products')->Where("category_id")->is($request->id)->delete();
-        $db->from('category')->Where("id")->is($request->id)->delete();
-        echo json_encode(["status" => true, "msg" => "Category Deleted"]);
+        $db->from('products')->Where("id")->is($request->id)->delete();
+        echo json_encode(["status" => true, "msg" => "Product Deleted"]);
     } catch (Exception $ex) {
         echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
         die();

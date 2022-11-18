@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Authenticating user  
     $fun->verify_token();
 
-    // fetching all reviews 
+    // fetching all offers 
     $data = $db->from('offers')->select()->all();
     echo json_encode(["status" => true, "data" => $data]);
 } else {

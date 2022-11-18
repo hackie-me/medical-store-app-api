@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // creating new user
+    // creating new offers
     $result = $db->insert(array(
         'image' => base64_encode($request->image),
         'discount' => $request->discount,
