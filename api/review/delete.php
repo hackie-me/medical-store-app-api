@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
 
@@ -39,4 +40,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }

@@ -9,8 +9,16 @@ $validator = new Validator;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $user = $fun->verify_token();
+    $user = null;
+    if (!empty($fun)) {
+        $user = $fun->verify_token();
+    }else{
+        http_response_code(500);
+    }
+    if($user == null){
+        http_response_code(403);
+        exit();
+    }
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
@@ -28,31 +36,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
 
 
     // Updating user
-    $result = $db->update('admin')
-        ->where('id')->is($user['id'])
-        ->set(array(
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'email' => $request->email,
-        ));
+    if (!empty($db) && !empty($fun)) {
+        $result = $db->update('admin')
+            ->where('id')->is($user['id'])
+            ->set(array(
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+            ));
+        // Getting user info
+        $result = $db->from('admin')
+            ->where('phone')->is($request->phone)->select()
+            ->first();
 
-    // Getting user info 
-    $result = $db->from('admin')
-        ->where('phone')->is($request->phone)->select()
-        ->first();
-
-    // generating new auth token 
-    if ($result == true) {
-        // generating new auth token 
-        $token = $fun->generate_token($result);
-        // sending response 
-        echo json_encode(["status" => true, "token" => $token]);
+        // generating new auth token
+        if ($result) {
+            // generating new auth token
+            $token = $fun->generate_token($result);
+            // sending response
+            echo json_encode(["status" => true, "token" => $token]);
+        }
+    }else{
+        http_response_code(500);
     }
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }

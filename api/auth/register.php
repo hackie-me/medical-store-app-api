@@ -33,47 +33,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
 
     // checking that data is unique or not 
-    $uniq = $db->from('users')
-        ->where('phone')->is($request->phone)
-        ->orWhere('email')->is($request->email)
-        ->orWhere('username')->is($request->username)
-        ->select()
-        ->count();
-        
-    if($uniq > 0){
-        echo json_encode(["success" => false, "msg" => "user already exist"]);
-        exit;
-    }
+    if (!empty($db) && !empty($fun)) {
+        $uniq = $db->from('users')
+            ->where('phone')->is($request->phone)
+            ->orWhere('email')->is($request->email)
+            ->orWhere('username')->is($request->username)
+            ->select()
+            ->count();
+        if($uniq > 0){
+            echo json_encode(["success" => false, "msg" => "user already exist"]);
+            exit;
+        }
+        // creating new user
+        $result = $db->insert(array(
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'phone' => $request->phone,
+            'username' => $request->username,
+            'email' => $request->email,
+            'mail_hash' => hash('md5', $request->email),
+            'password' => password_hash($request->password, PASSWORD_BCRYPT)
+        ))->into('users');
 
-    // creating new user
-    $result = $db->insert(array(
-        'first_name' => $request->first_name,
-        'last_name' => $request->last_name,
-        'address' => $request->address,
-        'city' => $request->city,
-        'state' => $request->state,
-        'zip' => $request->zip,
-        'phone' => $request->phone,
-        'username' => $request->username,
-        'email' => $request->email,
-        'mail_hash' => hash('md5', $request->email),
-        'password' => password_hash($request->password, PASSWORD_BCRYPT)
-    ))->into('users');
-
-    // Getting user info 
-    $result = $db->from('users')
-        ->where('phone')->is($request->phone)->select()
-        ->first();
-    if ($request == true) {
-        // generating new auth token 
-        $token = $fun->generate_token($result);
-        // sending response 
-        echo json_encode(["status" => true, "token" => $token]);
+        // Getting user info
+        $result = $db->from('users')
+            ->where('phone')->is($request->phone)->select()
+            ->first();
+        if ($request) {
+            // generating new auth token
+            $token = $fun->generate_token($result);
+            // sending response
+            echo json_encode(["status" => true, "token" => $token]);
+        }else{
+            http_response_code(500);
+        }
+    }else{
+        http_response_code(500);
     }
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }

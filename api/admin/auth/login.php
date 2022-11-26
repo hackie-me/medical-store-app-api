@@ -7,13 +7,16 @@ use Rakit\Validation\Validator;
 require '../../../config/config.php';
 $validator = new Validator;
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+/**
+ * @param Validator $validator
+ * @return mixed
+ */
+function getRequestData(Validator $validator): mixed
+{
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
-    // request validator 
+    // request validator
     $validation = $validator->make((array)$request, [
         'phone' => 'required|min:10|max:10',
         'password' => 'required|min:6',
@@ -25,30 +28,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
+    return $request;
+}
 
-    // Authenticating 
-    $result = $db->from('admin')
-        ->where('phone')->is($request->phone)->select()
-        ->first();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if ($result == true) {
+    $request = getRequestData($validator);
+
+    // Authenticating
+    $result = null;
+    if (!empty($db)) {
+        $result = $db->from('admin')
+            ->where('phone')->is($request->phone)->select()
+            ->first();
+    }else{
+        http_response_code(500);
+    }
+
+    if (!$result) {
+        echo json_encode(["status" => false, "msg" => "invalid credentials"]);
+        http_response_code(400);
+    } else {
         if (password_verify($request->password, $result['password'])) {
-            // generating new auth token 
-            $token = $fun->generate_token($result);
-
-            // sending response 
+            $token = null;
+            // generating new auth token
+            if (!empty($fun)) {
+                $token = $fun->generate_token($result);
+            }else{
+                http_response_code(500);
+            }
+            // sending response
             echo json_encode(["status" => true, "token" => $token]);
         } else {
             echo json_encode(["status" => false, "msg" => "Invalid password"]);
+            http_response_code(400);
         }
-    } else {
-        echo json_encode(["status" => false, "msg" => "invalid credentials"]);
     }
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }
-
-
-// $data = JWT::decode($token, new Key($secret_Key, 'HS512'));

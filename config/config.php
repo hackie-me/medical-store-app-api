@@ -24,8 +24,10 @@ try {
     $db = new Database($connection);
 } catch (PDOException $ex) {
     echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+    http_response_code(500);
     die();
 } catch (Exception $ex) {
     echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+    http_response_code(500);
     die();
 }

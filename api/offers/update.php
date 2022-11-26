@@ -8,8 +8,12 @@ $validator = new Validator;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $user  =  $fun->verify_token();
+    $user = null;
+    if (!empty($fun)) {
+        $user  =  $fun->verify_token();
+    }else{
+        http_response_code(500);
+    }
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
@@ -26,20 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
 
     // updating offers
-    $result = $db->update('offers')
-        ->where('uid')->is($user['userid'])
-        ->andWhere('pid')->is($request->pid)
-        ->set(array(
-            'image' => base64_encode($request->image),
-            'discount' => $request->discount,
-            'code' => $request->code
-        ));
+    if (!empty($db)) {
+        $result = $db->update('offers')
+            ->where('uid')->is($user['userid'])
+            ->andWhere('pid')->is($request->pid)
+            ->set(array(
+                'image' => base64_encode($request->image),
+                'discount' => $request->discount,
+                'code' => $request->code
+            ));
+        echo json_encode(["status" => true, "msg" => "Offer updated"]);
+    }
 
-    echo json_encode(["status" => true, "msg" => "Offer updated"]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }

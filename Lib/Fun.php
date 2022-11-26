@@ -9,19 +9,18 @@ namespace nms {
     class Fun
     {
         // function to generate new token 
-        public static function generate_token($result)
+        public static function generate_token($result): string
         {
             $date   = new DateTimeImmutable();
             $request_data = [
                 'iat'  => $date->getTimestamp(),
                 'data' => $result
             ];
-            $token = JWT::encode(
+            return JWT::encode(
                 $request_data,
                 SECRET_KEY,
                 'HS512'
             );
-            return $token;
         }
         // function to decode token 
         public static function verify_token()
@@ -33,14 +32,15 @@ namespace nms {
                     $token = explode(" ", $request['Authorization']);
                     $token = $token[1];
                     $data = JWT::decode($token, new Key(SECRET_KEY, 'HS512'));
-                    $authUser = (array)$data->data;
-                    return $authUser;
+                    return (array)$data->data;
                 } else {
                     echo json_encode(["status" => true, "msg" => "auth token missing"]);
+                    http_response_code(401);
                     exit();
                 }
             } catch (\Exception $ex) {
                 echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+                http_response_code(401);
                 die();
             }
         }

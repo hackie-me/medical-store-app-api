@@ -28,39 +28,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
 
-    // checking that data is unique or not 
-    $uniq = $db->from('admin')
-        ->where('phone')->is($request->phone)
-        ->orWhere('email')->is($request->email)
-        ->select()
-        ->count();
+    // checking that data is unique or not
+    $uniq = null;
+    if (!empty($db) && !empty($fun)) {
+        $uniq = $db->from('admin')
+            ->where('phone')->is($request->phone)
+            ->orWhere('email')->is($request->email)
+            ->select()
+            ->count();
+        if ($uniq > 0) {
+            echo json_encode(["success" => false, "msg" => "admin already exist"]);
+            exit;
+        }else{
+            // creating new user
+            $result = $db->insert(array(
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => password_hash($request->password, PASSWORD_BCRYPT)
+            ))->into('admin');
 
-    if ($uniq > 0) {
-        echo json_encode(["success" => false, "msg" => "admin already exist"]);
-        exit;
+            // Getting user info
+            $result = $db->from('admin')
+                ->where('phone')->is($request->phone)->select()
+                ->first();
+
+            // generating new auth token
+            $token = $fun->generate_token($result);
+            // sending response
+            echo json_encode(["status" => true, "token" => $token]);
+        }
+    }else{
+        http_response_code(500);
     }
-
-
-    // creating new user
-    $result = $db->insert(array(
-        'name' => $request->name,
-        'phone' => $request->phone,
-        'email' => $request->email,
-        'password' => password_hash($request->password, PASSWORD_BCRYPT)
-    ))->into('admin');
-
-    // Getting user info 
-    $result = $db->from('admin')
-        ->where('phone')->is($request->phone)->select()
-        ->first();
-
-    // generating new auth token 
-    $token = $fun->generate_token($result);
-    // sending response 
-    echo json_encode(["status" => true, "token" => $token]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }

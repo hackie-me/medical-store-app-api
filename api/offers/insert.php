@@ -8,7 +8,11 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $user  =  $fun->verify_token();
+    if (!empty($fun)) {
+        $user  =  $fun->verify_token();
+    }else{
+        http_response_code(500);
+    }
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
@@ -25,17 +29,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($validation->fails()) {
         $errors = $validation->errors();
         echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        http_response_code(406);
         exit;
     }
 
     // creating new offers
-    $result = $db->insert(array(
-        'image' => base64_encode($request->image),
-        'discount' => $request->discount,
-        'code' => $request->code
-    ))->into('offers');
+    if (!empty($db)) {
+        $result = $db->insert(array(
+            'image' => base64_encode($request->image),
+            'discount' => $request->discount,
+            'code' => $request->code
+        ))->into('offers');
+        echo json_encode(["status" => true, "msg" => "Offer inserted"]);
+        http_response_code(201);
+    }else{
+        http_response_code(500);
+    }
 
-    echo json_encode(["status" => true, "msg" => "Offer inserted"]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    http_response_code(405);
 }

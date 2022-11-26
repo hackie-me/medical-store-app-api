@@ -2,6 +2,7 @@
     "require": {
         "firebase/php-jwt": "^6.3",
         "rakit/validation": "^1.4",
-        "opis/database": "^4.0"
+        "opis/database": "^4.0",
+      "ext-json": "*"
     }
 }
