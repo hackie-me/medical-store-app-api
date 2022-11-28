@@ -33,8 +33,13 @@ require './../config/config.php';
                     $data = JWT::decode($token, new Key(SECRET_KEY, 'HS512'));
                     $data = (array)$data->data;
                     if (!empty($db)) {
-                        $validate = $db->from('users')->where('userid', $data[0])->select()->all();
-                        return $data;
+                        $validate = $db->from('users')->where('userid', $data[0])->select()->count();
+                        if($validate == 1){
+                            return $data;
+                        }else{
+                            http_response_code(401);
+                            exit();
+                        }
                     }else{
                         http_response_code(500);
                         exit();
