@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->where('phone')->is($request->phone)->select()
                 ->first();
 
-            // generating new auth token
+            // generating new user_auth token
             $token = $fun->generate_token($result);
             // sending response
             echo json_encode(["status" => true, "token" => $token]);

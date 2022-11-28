@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         if (password_verify($request->password, $result['password'])) {
             $token = null;
-            // generating new auth token
+            // generating new user_auth token
             if (!empty($fun)) {
                 $token = $fun->generate_token($result);
             }else{

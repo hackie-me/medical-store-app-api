@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // updating offers
     if (!empty($db)) {
         $result = $db->update('offers')
-            ->where('uid')->is($user['userid'])
+            ->where('uid')->is($user[0]) // ['userid']
             ->andWhere('pid')->is($request->pid)
             ->set(array(
                 'image' => base64_encode($request->image),

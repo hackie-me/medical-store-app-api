@@ -10,7 +10,9 @@ $validator = new Validator;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    $fun->verify_token();
+    if (!empty($fun)) {
+        $fun->verify_token();
+    }
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
@@ -29,7 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     // fetching review by product id  
-    $data = $db->from('review')->where('pid')->is($request->pid)->select()->all();
+    if (!empty($db)) {
+        $data = $db->from('review')->where('pid')->is($request->pid)->select()->all();
+    }
     echo json_encode(["status" => true, "data" => $data]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);

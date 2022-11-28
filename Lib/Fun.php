@@ -1,7 +1,6 @@
 <?php
-
 namespace nms {
-
+require './../config/config.php';
     use DateTimeImmutable;
     use Firebase\JWT\JWT;
     use Firebase\JWT\Key;
@@ -32,9 +31,16 @@ namespace nms {
                     $token = explode(" ", $request['Authorization']);
                     $token = $token[1];
                     $data = JWT::decode($token, new Key(SECRET_KEY, 'HS512'));
-                    return (array)$data->data;
+                    $data = (array)$data->data;
+                    if (!empty($db)) {
+                        $validate = $db->from('users')->where('userid', $data[0])->select()->all();
+                        return $data;
+                    }else{
+                        http_response_code(500);
+                        exit();
+                    }
                 } else {
-                    echo json_encode(["status" => true, "msg" => "auth token missing"]);
+                    echo json_encode(["status" => true, "msg" => "user_auth token missing"]);
                     http_response_code(401);
                     exit();
                 }

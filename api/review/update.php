@@ -9,7 +9,9 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $user  =  $fun->verify_token();
+    if (!empty($fun)) {
+        $user  =  $fun->verify_token();
+    }
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
@@ -32,17 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     // updating review
-    $result = $db->update('review')
-        ->where('uid')->is($user['userid'])
-        ->andWhere('pid')->is($request->pid)
-        ->set(array(
-            'uid' => $user['userid'],
-            'pid' => $request->pid,
-            'name' => $user['first_name'] . $user['last_name'],
-            'msg' => $request->msg,
-            'rating' => $request->rating
-        ));
-
+    if (!empty($db)) {
+        if (!empty($user)) {
+            $result = $db->update('review')
+                ->where('uid')->is($user[0]) // ['userid']
+                ->andWhere('pid')->is($request->pid)
+                ->set(array(
+                    'uid' => $user[0], // ['userid']
+                    'pid' => $request->pid,
+                    'name' => $user[1] . $user[2],
+                    'msg' => $request->msg,
+                    'rating' => $request->rating
+                ));
+        }else{
+            echo json_encode(['status' => false, 'msg' => 'Missing User data']);
+            http_response_code(500);
+        }
+    }
     echo json_encode(["status" => true, "msg" => "review updated"]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);

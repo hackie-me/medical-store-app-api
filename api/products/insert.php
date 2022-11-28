@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'expiry_date' => 'required|date:d-m-Y',
         'thumbnail' => 'required|extension:0,500K,png,jpeg',
         'images' => 'required|array',
-        'images.*' => 'required|uploaded_file:0,500K,png,jpeg',
+        'images.*' => 'uploaded_file:0,500K,png,jpeg',
         'ingredients' => 'required',
     ]);
 

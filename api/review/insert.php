@@ -8,7 +8,9 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $user  =  $fun->verify_token();
+    if (!empty($fun)) {
+        $user  =  $fun->verify_token();
+    }
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
@@ -30,25 +32,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // checking that data is unique or not 
-    $uniq = $db->from('review')
-        ->where('uid')->is($user['userid'])
-        ->andWhere('pid')->is($request->pid)
-        ->select()
-        ->count();
+    if (!empty($db)) {
+        /** @var String $user */
+        $uniq = $db->from('review')
+            ->where('uid')->is($user[0]) // userid
+            ->andWhere('pid')->is($request->pid)
+            ->select()
+            ->count();
+    }
 
-    if ($uniq > 0) {
-        echo json_encode(["success" => false, "msg" => "You have already placed review for this product"]);
-        exit;
+    if (!empty($uniq)) {
+        if ($uniq > 0) {
+            echo json_encode(["success" => false, "msg" => "You have already placed review for this product"]);
+            exit;
+        }
     }
 
     // creating new user
-    $result = $db->insert(array(
-        'uid' => $user['userid'],
-        'pid' => $request->pid,
-        'name' => $user['first_name'] . $user['last_name'],
-        'msg' => $request->msg,
-        'rating' => $request->rating,
-    ))->into('review');
+    if (!empty($db)) {
+        $result = $db->insert(array(
+            'uid' => $user[0], // userid
+            'pid' => $request->pid,
+            'name' => $user[1] . $user[2], // first_name, last_name
+            'msg' => $request->msg,
+            'rating' => $request->rating,
+        ))->into('review');
+    }
 
     echo json_encode(["status" => true, "msg" => "review inserted"]);
     http_response_code(201);
