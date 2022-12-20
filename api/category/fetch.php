@@ -5,9 +5,7 @@ use Rakit\Validation\Validator;
 require '../../config/config.php';
 $validator = new Validator;
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
     // Authenticating user  
     if (!empty($fun)) {
         $fun->verify_token();
