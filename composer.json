@@ -4,6 +4,7 @@
         "rakit/validation": "^1.4",
         "opis/database": "^4.0",
       "ext-json": "*",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+        "phpmailer/phpmailer": "^6.7"
     }
 }

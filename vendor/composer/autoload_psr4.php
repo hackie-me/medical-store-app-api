@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Rakit\\Validation\\' => array($vendorDir . '/rakit/validation/src'),
+    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Opis\\Database\\' => array($vendorDir . '/opis/database/src'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
 );
