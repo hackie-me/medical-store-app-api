@@ -16,6 +16,7 @@ const DB_DATABASE = 'nms';
 const DSN = DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_DATABASE;
 const SECRET_KEY = 'nRM8jRhKCN0EZVs1uh3RRVgbnMSjOzfvenPxDp2cGhxqkMr45Evxf4SuDqGnxqSr';
 const DOMAIN_NAME = 'www.nilkanth-medical-store.com';
+define("STORAGE_PATH", "{$_SERVER['DOCUMENT_ROOT']}/nms/storage/");
 $date   = new DateTimeImmutable();
 $fun = new Fun();
 

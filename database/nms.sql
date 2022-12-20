@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
   `phone` varchar(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -18,6 +19,10 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `description` varchar(255) NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 );
 
@@ -35,8 +40,17 @@ CREATE TABLE IF NOT EXISTS `contact` (
 DROP TABLE IF EXISTS `offers`;
 CREATE TABLE IF NOT EXISTS `offers` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT '',
   `image` longtext NOT NULL,
+  `price` varchar(255) NULL,
   `discount` varchar(255) NOT NULL,
+  `discount_price` varchar(255) NOT NULL,
+  `start_date` varchar(255) NOT NULL,
+  `end_date` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'active',
+  `category_id` int NOT NULL,
+  `brand_name` varchar(255) NOT NULL DEFAULT 'Nilkanth Medical Store',
   `code` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -47,6 +61,7 @@ DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
+  `description` text NOT NULL,
   `price` varchar(255) NOT NULL DEFAULT '0',
   `mrp` varchar(100) NOT NULL DEFAULT '0',
   `discount` varchar(100) NOT NULL DEFAULT '0',
@@ -56,6 +71,14 @@ CREATE TABLE IF NOT EXISTS `products` (
   `thumbnail` longtext NOT NULL,
   `images` longtext NOT NULL,
   `ingredients` text NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'active',
+  `unit` varchar(255) NOT NULL DEFAULT '',
+  `unit_description` varchar(255) NOT NULL DEFAULT '1',
+  `in_stock` varchar(255) NOT NULL DEFAULT '1',
+  `stock` varchar(255) NOT NULL DEFAULT '1',
+  `sold` varchar(255) NOT NULL DEFAULT 0,
+  `rating` varchar(255) NOT NULL DEFAULT 0,
+  `rating_count` varchar(255) NOT NULL DEFAULT 0,
   `category_id` int NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -110,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `social_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `avatar` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'https://api.multiavatar.com/stefan.svg',
+  `image` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'https://api.multiavatar.com/stefan.svg',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`userid`),

@@ -18,9 +18,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator 
     $validation = $validator->make((array)$request, [
+        'name' => 'required',
         'image' => 'required|max:255',
+        'offer' => 'required|max:255',
+        'price' => 'required|max:255',
+        'description' => 'required|max:255',
+        'start_date' => 'required|max:255',
+        'end_date' => 'required|max:255',
         'discount' => 'required',
+        'discount_price' => 'required',
+        'category' => 'required',
+        'brand' => 'required',
         'code' => 'required',
+        'status' => 'required',
     ]);
 
     $validation->validate();
@@ -35,10 +45,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // creating new offers
     if (!empty($db)) {
+        // uploading offer image
+        $image = $request->image;
+        $fun->upload_image($image);
+
         $result = $db->insert(array(
-            'image' => base64_encode($request->image),
+            'name' => $request->name,
+            'image' => $request->image,
+            'offer' => $request->offer,
+            'price' => $request->price,
+            'description' => $request->description,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
             'discount' => $request->discount,
-            'code' => $request->code
+            'discount_price' => $request->discount_price,
+            'category' => $request->category,
+            'brand' => $request->brand,
+            'code' => $request->code,
+            'status' => $request->status
         ))->into('offers');
         echo json_encode(["status" => true, "msg" => "Offer inserted"]);
         http_response_code(201);

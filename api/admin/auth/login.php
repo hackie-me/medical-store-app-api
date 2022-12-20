@@ -18,8 +18,8 @@ function getRequestData(Validator $validator): mixed
 
     // request validator
     $validation = $validator->make((array)$request, [
-        'phone' => 'required|min:10|max:10',
-        'password' => 'required|min:6',
+        'email' => 'required|email',
+        'password' => 'required',
     ]);
 
     $validation->validate();
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = null;
     if (!empty($db)) {
         $result = $db->from('admin')
-            ->where('phone')->is($request->phone)->select()
+            ->where('email')->is($request->email)->select()
             ->first();
     }else{
         http_response_code(500);

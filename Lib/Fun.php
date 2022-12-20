@@ -1,6 +1,8 @@
 <?php
 namespace nms {
-require './../config/config.php';
+// Including config file
+require_once "{$_SERVER['DOCUMENT_ROOT']}/nms/config/config.php";
+
     use DateTimeImmutable;
     use Firebase\JWT\JWT;
     use Firebase\JWT\Key;
@@ -53,6 +55,44 @@ require './../config/config.php';
                 echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
                 http_response_code(401);
                 die();
+            }
+        }
+
+        public function upload_image($image): bool
+        {
+            $target_dir = STORAGE_PATH . "/image/admin_profile_pictures/";
+            $target_file = $target_dir . basename($image["name"]);
+            $uploadOk = 1;
+            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+            // Check if image file is an actual image or fake image
+            $check = getimagesize($image["tmp_name"]);
+            if (!$check) {
+                $uploadOk = 0;
+            }
+            // Check if file already exists
+            if (file_exists($target_file)) {
+                $uploadOk = 0;
+            }
+            // Check file size
+            if ($image["size"] > 500000) {
+                $uploadOk = 0;
+            }
+            // Allow certain file formats
+            if (
+                $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif"
+            ) {
+                $uploadOk = 0;
+            }
+            // Check if $uploadOk is set to 0 by an error
+            if ($uploadOk == 0) {
+                return false;
+            } else {
+                if (move_uploaded_file($image["tmp_name"], $target_file)) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
