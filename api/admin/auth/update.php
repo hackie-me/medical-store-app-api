@@ -1,22 +1,21 @@
 <?php
+// Require config file
+include "../../../config/config.php";
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
-
-require '../../../config/config.php';
 $validator = new Validator;
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = null;
     if (!empty($fun)) {
-        $user = $fun->verify_token();
+        $user = $fun->verify_token(true);
     }else{
         http_response_code(500);
+        echo json_encode(["success" => false, "msg" => "Internal Server Error"]);
     }
     if($user == null){
         http_response_code(403);
+        echo json_encode(["success" => false, "msg" => "Forbidden"]);
         exit();
     }
 
@@ -26,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // request validator 
     $validation = $validator->make((array)$request, [
         'name' => 'required',
+        'image' => 'required|mimes:jpeg,png,jpg,gif,svg',
         'phone' => 'required|min:10|max:10',
         'email' => 'required|email',
     ]);
@@ -35,11 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode(["success" => false, "err" => $errors->firstOfAll()]);
         http_response_code(406);
         exit;
     }
-
 
     // Updating user
     if (!empty($db) && !empty($fun)) {
@@ -64,8 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }else{
         http_response_code(500);
+        echo json_encode(["success" => false, "msg" => "Internal Server Error"]);
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
+    echo json_encode(["success" => false, "msg" => "Method not allowed"]);
 }

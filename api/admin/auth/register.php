@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => 'required',
         'phone' => 'required|min:10|max:10',
         'email' => 'required|email',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'password' => 'required|min:6',
         'confirm_password' => 'required|same:password'
     ]);
@@ -48,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // creating new user
             $result = $db->insert(array(
                 'name' => $request->name,
-                'image' => $fun->upload_image($request->image),
+                'image' => "default.jpg",
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => password_hash($request->password, PASSWORD_BCRYPT)

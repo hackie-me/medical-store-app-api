@@ -40,18 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating
     $result = null;
+    $result_count = 0;
     if (!empty($db)) {
         $result = $db->from('admin')
             ->where('email')->is($request->email)->select()
             ->first();
+        $result_count = $db->from('admin')
+            ->where('email')->is($request->email)->select()
+            ->count();
     }else{
         http_response_code(500);
     }
 
-    if (!$result) {
+    if (!$result && $result_count != 1) {
         echo json_encode(["status" => false, "msg" => "invalid credentials"]);
         http_response_code(400);
     } else {
+        echo json_encode(["status" => true, "msg" => $result['password']]);
         if (password_verify($request->password, $result['password'])) {
             $token = null;
             // generating new user_auth token

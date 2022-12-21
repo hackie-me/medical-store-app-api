@@ -5,6 +5,8 @@
         "opis/database": "^4.0",
       "ext-json": "*",
       "ext-pdo": "*",
-        "phpmailer/phpmailer": "^6.7"
+        "phpmailer/phpmailer": "^6.7",
+        "spatie/image-optimizer": "^1.6",
+      "ext-apache": "*"
     }
 }
