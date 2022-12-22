@@ -1,6 +1,6 @@
 <?php
 // Require config file
-include "../../../config/config.php";
+include "../../config/config.php";
 
 use Rakit\Validation\Validator;
 $validator = new Validator;
@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ->where('phone')->is($request->phone)->select()
             ->first();
 
-        // generating new user_auth token
+        // generating new user token
         if ($result) {
-            // generating new user_auth token
+            // generating new user token
             $token = $fun->generate_token($result);
             // sending response
             echo json_encode(["status" => true, "token" => $token]);

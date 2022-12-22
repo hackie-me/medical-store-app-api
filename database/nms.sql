@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS `products` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `purchase`;
-CREATE TABLE IF NOT EXISTS `purchase` (
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE IF NOT EXISTS `orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `uid` varchar(255) NOT NULL DEFAULT '0',
   `pid` varchar(100) NOT NULL DEFAULT '0',

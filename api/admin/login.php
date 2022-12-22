@@ -4,7 +4,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
 
-require '../../../config/config.php';
+require '../../config/config.php';
 $validator = new Validator;
 
 /**
@@ -56,10 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(["status" => false, "msg" => "invalid credentials"]);
         http_response_code(400);
     } else {
-        echo json_encode(["status" => true, "msg" => $result['password']]);
         if (password_verify($request->password, $result['password'])) {
             $token = null;
-            // generating new user_auth token
+            // generating new user token
             if (!empty($fun)) {
                 $token = $fun->generate_token($result);
             }else{

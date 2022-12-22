@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting offers from database  
+    // deleting offer from database
     try {
         if (!empty($db)) {
-            $db->from('offers')->Where("id")->is($request->id)->delete();
+            $db->from('offer')->Where("id")->is($request->id)->delete();
             echo json_encode(["status" => true, "msg" => "Offer Deleted"]);
         }else{
             http_response_code(500);

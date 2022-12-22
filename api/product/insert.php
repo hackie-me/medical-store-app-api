@@ -2,21 +2,24 @@
 
 use Rakit\Validation\Validator;
 
-require '../../../config/config.php';
+require '../../config/config.php';
 $validator = new Validator;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Authenticating user  
-    $user = $fun->verify_token();
+    $user = null;
+    // Authenticating user   
+    if (!empty($fun)) {
+        $user = $fun->verify_token();
+    }else{
+        http_response_code(500);
+    }
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
     // request validator 
     $validation = $validator->make((array)$request, [
-        'id' => 'required|integer',
         'name' => 'required',
         'price' => 'required',
         'mrp' => 'required',
@@ -25,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'brand_name' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
         'thumbnail' => 'required|extension:0,500K,png,jpeg',
-        'images.*' => 'required|array',
-        'images.*' => 'required|uploaded_file:0,500K,png,jpeg',
+        'images' => 'required|array',
+        'images.*' => 'uploaded_file:0,500K,png,jpeg',
         'ingredients' => 'required',
     ]);
 
@@ -40,23 +43,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // updating products  
+    // inserting records into database 
     try {
-        $result = $db->update('products')
-        ->where('id')->is($request->id)
-        ->set(array(
-            'name' => $request->name,
-            'price' => $request->price,
-            'mrp' => $request->mrp,
-            'discount' => $request->discount,
-            'quantity' => $request->quantity,
-            'brand_name' => $request->brand_name != null ? $request->brand_name : 'Nilkanth Medical',
-            'expiry_data' => $request->expiry_date,
-            'thumbnail' => base64_encode($request->thumbnail),
-            'images' => $request->images,
-            'ingredients' => $request->ingredients,
-        ));
-        echo json_encode(["status" => true, "msg" => "category updated"]);
+        if (!empty($db)) {
+            $result = $db->insert(array(
+                'name' => $request->name,
+                'price' => $request->price,
+                'mrp' => $request->mrp,
+                'discount' => $request->discount,
+                'quantity' => $request->quantity,
+                'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
+                'expiry_data' => $request->expiry_date,
+                'thumbnail' => base64_encode($request->thumbnail),
+                'images' => $request->images,
+                'ingredients' => $request->ingredients,
+            ))->into('product');
+            echo json_encode(["status" => true, "msg" => "product inserted"]);
+            http_response_code(201);
+        }
     } catch (Exception $ex) {
         echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
         die();

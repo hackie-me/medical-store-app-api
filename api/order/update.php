@@ -40,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // updating products  
+    // updating product
     try {
-        $result = $db->update('products')
+        $result = $db->update('product')
         ->where('id')->is($request->id)
         ->set(array(
             'name' => $request->name,

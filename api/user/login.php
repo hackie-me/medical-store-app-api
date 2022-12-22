@@ -12,12 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating 
     if (!empty($db) && !empty($fun)) {
-        $result = $db->from('users')
+        $result = $db->from('user')
             ->where('phone')->is($request->phone)->select()
             ->first();
         if ($result) {
             if (password_verify($request->password, $result['password'])) {
-                // generating new user_auth token
+                // generating new user token
                 $token = $fun->generate_token($result);
                 // sending response
                 echo json_encode(["status" => true, "token" => $token]);

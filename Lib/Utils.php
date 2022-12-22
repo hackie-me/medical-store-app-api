@@ -63,7 +63,7 @@ class Utils
                     if($admin){
                         return Utils::authenticate_user("admin", "id", $data['id'], $data);
                     }else{
-                        return Utils::authenticate_user("users", "userid", $data['id'], $data);
+                        return Utils::authenticate_user("user", "userid", $data['id'], $data);
                     }
                 } else {
                     http_response_code(401);

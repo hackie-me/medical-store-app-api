@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // fetching category data  
-    $data = $db->from('purchase')->where('uid', $request->user_id)->select()->all();
+    $data = $db->from('order')->where('uid', $request->user_id)->select()->all();
     echo json_encode(["status" => true, "data" => $data]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);

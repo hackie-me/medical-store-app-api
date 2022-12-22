@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // creating new offers
+    // creating new offer
     if (!empty($db)) {
         // uploading offer image
         $image = $request->image;
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'brand' => $request->brand,
             'code' => $request->code,
             'status' => $request->status
-        ))->into('offers');
+        ))->into('offer');
         echo json_encode(["status" => true, "msg" => "Offer inserted"]);
         http_response_code(201);
     }else{

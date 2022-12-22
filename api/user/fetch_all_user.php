@@ -1,24 +1,20 @@
 <?php
 
-use Rakit\Validation\Validator;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 require '../../config/config.php';
-$validator = new Validator;
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Authenticating user  
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (!empty($fun)) {
         $fun->verify_token();
     }else{
         http_response_code(500);
     }
-
-    // fetching category data
+    // fetching all user list
     $data = null;
     if (!empty($db)) {
-        $data = $db->from('purchase')->select()->all();
+        $data = $db->from('user')->select()->all();
     }else{
         http_response_code(500);
     }

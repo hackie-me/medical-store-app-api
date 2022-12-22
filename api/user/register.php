@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // checking that data is unique or not 
     if (!empty($db) && !empty($fun)) {
-        $uniq = $db->from('users')
+        $uniq = $db->from('user')
             ->where('phone')->is($request->phone)
             ->orWhere('email')->is($request->email)
             ->orWhere('username')->is($request->username)
@@ -62,14 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'email' => $request->email,
             'mail_hash' => hash('md5', $request->email),
             'password' => password_hash($request->password, PASSWORD_BCRYPT)
-        ))->into('users');
+        ))->into('user');
 
         // Getting user info
-        $result = $db->from('users')
+        $result = $db->from('user')
             ->where('phone')->is($request->phone)->select()
             ->first();
         if ($request) {
-            // generating new user_auth token
+            // generating new user token
             $token = $fun->generate_token($result);
             // sending response
             echo json_encode(["status" => true, "token" => $token]);

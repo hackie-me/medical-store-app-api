@@ -6,22 +6,19 @@ use Rakit\Validation\Validator;
 require '../../config/config.php';
 $validator = new Validator;
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = null;
+
+    // Authenticating user
     if (!empty($fun)) {
-        $user  =  $fun->verify_token();
-    }else{
-        http_response_code(500);
+        $user = $fun->verify_token();
     }
+
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
-    // request validator  
+    // request validator
     $validation = $validator->make((array)$request, [
-        'image' => 'required|max:255',
-        'discount' => 'required',
-        'code' => 'required',
+        'id' => 'required',
     ]);
 
     $validation->validate();
@@ -34,19 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // updating offers
-    if (!empty($db)) {
-        $result = $db->update('offers')
-            ->where('uid')->is($user[0]) // ['userid']
-            ->andWhere('pid')->is($request->pid)
-            ->set(array(
-                'image' => base64_encode($request->image),
-                'discount' => $request->discount,
-                'code' => $request->code
-            ));
-        echo json_encode(["status" => true, "msg" => "Offer updated"]);
+    // deleting category from database
+    try {
+        if (!empty($db)) {
+            $db->from('user')->Where("userid")->is($request->id)->delete();
+        }
+        echo json_encode(["status" => true, "msg" => "User Deleted"]);
+    } catch (Exception $ex) {
+        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        die();
     }
-
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);

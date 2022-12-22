@@ -1,4 +1,3 @@
-
 <?php
 
 use Rakit\Validation\Validator;
@@ -9,9 +8,11 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Authenticating user
+    // Authenticating user  
     if (!empty($fun)) {
         $user = $fun->verify_token();
+    }else{
+        http_response_code(500);
     }
 
     $request = file_get_contents("php://input");
@@ -32,14 +33,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting category from database
+    // deleting category from database  
     try {
         if (!empty($db)) {
-            $db->from('review')->Where("id")->is($request->id)->delete();
+            $db->from('product')->Where("id")->is($request->id)->delete();
+            echo json_encode(["status" => true, "msg" => "Product Deleted"]);
+        }else{
+            http_response_code(500);
         }
-        echo json_encode(["status" => true, "msg" => "review Deleted"]);
     } catch (Exception $ex) {
         echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        http_response_code(500);
         die();
     }
 } else {

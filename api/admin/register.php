@@ -4,7 +4,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Rakit\Validation\Validator;
 
-require '../../../config/config.php';
+require '../../config/config.php';
 $validator = new Validator;
 
 
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->where('phone')->is($request->phone)->select()
                 ->first();
 
-            // generating new user_auth token
+            // generating new user token
             $token = $fun->generate_token($result);
             // sending response
             echo json_encode(["status" => true, "token" => $token]);

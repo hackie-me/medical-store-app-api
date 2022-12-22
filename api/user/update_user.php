@@ -7,7 +7,7 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // verifying user_auth token
+    // verifying user token
     if (!empty($fun)) {
         $user = $fun->verify_token();
     }
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Updating user
     if (!empty($db) && !empty($fun)) {
-        $result = $db->update('users')
+        $result = $db->update('user')
             ->where('userid')->is($user[0]) // ['userid']
             ->set(array(
                 'first_name' => $request->first_name,
@@ -53,13 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'email' => $request->email,
             ));
         // Getting user info
-        $result = $db->from('users')
+        $result = $db->from('user')
             ->where('phone')->is($request->phone)->select()
             ->first();
 
-        // generating new user_auth token
+        // generating new user token
         if ($result) {
-            // generating new user_auth token
+            // generating new user token
             $token = $fun->generate_token($result);
 
             // sending response

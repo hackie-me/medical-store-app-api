@@ -15,9 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(500);
     }
 
-    // fetching all offers 
+    // fetching all offer
     if (!empty($db)) {
-        $data = $db->from('offers')->select()->all();
+        $data = $db->from('offer')->select()->all();
         echo json_encode(["status" => true, "data" => $data]);
     }else{
         http_response_code(500);

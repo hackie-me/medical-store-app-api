@@ -15,13 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(500);
     }
 
-    // fetching category data  
+    // fetching category data
+    $data = null;
     if (!empty($db)) {
-        $data = $db->from('products')->select()->all();
-        echo json_encode(["status" => true, "data" => $data]);
+        $data = $db->from('order')->select()->all();
     }else{
         http_response_code(500);
     }
+    echo json_encode(["status" => true, "data" => $data]);
 } else {
     echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);

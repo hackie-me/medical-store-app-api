@@ -2,7 +2,7 @@
 require '../../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Verifying user_auth token
+    // Verifying user token
     $data = null;
     if (!empty($fun)) {
         $data = $fun->verify_token();
