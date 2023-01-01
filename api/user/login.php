@@ -20,19 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // generating new user token
                 $token = $fun->generate_token($result);
                 // sending response
-                echo json_encode(["status" => true, "token" => $token]);
+                echo json_encode($token);
             } else {
-                echo json_encode(["status" => false, "msg" => "Invalid password"]);
                 http_response_code(400);
             }
         } else {
-            echo json_encode(["status" => false, "msg" => "invalid credentials"]);
             http_response_code(400);
         }
     }
-
-
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

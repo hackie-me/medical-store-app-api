@@ -116,8 +116,8 @@ CREATE TABLE IF NOT EXISTS `review` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
   `userid` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `first_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,

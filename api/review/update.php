@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator  
     $validation = $validator->make((array)$request, [
-        'msg' => 'required|max:255',
+        'required|max:255',
         'rating' => 'required|integer',
         'pid' => 'required|integer',
+        'msg' => 'required|max:255',
     ]);
 
     $validation->validate();
@@ -27,11 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
-
 
     // updating review
     if (!empty($db)) {
@@ -46,13 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'msg' => $request->msg,
                     'rating' => $request->rating
                 ));
+            http_response_code(204);
         }else{
-            echo json_encode(['status' => false, 'msg' => 'Missing User data']);
             http_response_code(500);
         }
     }
-    echo json_encode(["status" => true, "msg" => "review updated"]);
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

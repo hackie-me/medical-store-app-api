@@ -5,12 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Verifying user token
     $data = null;
     if (!empty($fun)) {
-        $data = $fun->verify_token();
+        $data = $fun->verify_token(true);
     }else{
         http_response_code(500);
     }
-    echo json_encode(["status" => true, "data" => $data]);
+    echo json_encode($data);
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }

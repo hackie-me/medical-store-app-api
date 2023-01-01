@@ -6,7 +6,7 @@ require '../../config/config.php';
 $validator = new Validator;
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Authenticating user  
     if (!empty($fun)) {
@@ -17,12 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // fetching category data  
     if (!empty($db)) {
-        $data = $db->from('product')->select()->all();
-        echo json_encode(["status" => true, "data" => $data]);
+        $data = $db->from('products')->select()->all();
+        echo json_encode($data);
     }else{
         http_response_code(500);
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }

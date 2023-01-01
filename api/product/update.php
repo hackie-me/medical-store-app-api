@@ -2,14 +2,16 @@
 
 use Rakit\Validation\Validator;
 
-require '../../../config/config.php';
+require '../../config/config.php';
 $validator = new Validator;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    $user = $fun->verify_token();
+    if (!empty($fun)) {
+        $user = $fun->verify_token(true);
+    }
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
@@ -24,9 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'quantity' => 'required',
         'brand_name' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
-        'thumbnail' => 'required|extension:0,500K,png,jpeg',
-        'images.*' => 'required|array',
-        'images.*' => 'required|uploaded_file:0,500K,png,jpeg',
+        'thumbnail' => 'required',
+        'images' => 'required',
         'ingredients' => 'required',
     ]);
 
@@ -35,14 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
 
     // updating product
     try {
-        $result = $db->update('product')
+        $result = $db->update('products')
         ->where('id')->is($request->id)
         ->set(array(
             'name' => $request->name,
@@ -56,12 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'images' => $request->images,
             'ingredients' => $request->ingredients,
         ));
-        echo json_encode(["status" => true, "msg" => "category updated"]);
+        http_response_code(204);
     } catch (Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
-        die();
+        echo json_encode($ex->getMessage());
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

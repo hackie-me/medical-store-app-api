@@ -11,11 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $fun->verify_token(true);
     }else{
         http_response_code(500);
-        echo json_encode(["success" => false, "msg" => "Internal Server Error"]);
     }
     if($user == null){
         http_response_code(403);
-        echo json_encode(["success" => false, "msg" => "Forbidden"]);
         exit();
     }
 
@@ -35,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "err" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -59,13 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // generating new user token
             $token = $fun->generate_token($result);
             // sending response
-            echo json_encode(["status" => true, "token" => $token]);
+            echo json_encode($token);
         }
     }else{
         http_response_code(500);
-        echo json_encode(["success" => false, "msg" => "Internal Server Error"]);
     }
 } else {
     http_response_code(405);
-    echo json_encode(["success" => false, "msg" => "Method not allowed"]);
 }

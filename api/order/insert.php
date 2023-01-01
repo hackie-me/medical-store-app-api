@@ -2,7 +2,7 @@
 
 use Rakit\Validation\Validator;
 
-require '../../../config/config.php';
+require '../../config/config.php';
 $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -54,15 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'pdf' => $request->pdf,
                 'total' => $request->total,
                 'status' => "pending",
-            ))->into('product');
+            ))->into('products');
         }
-        echo json_encode(["status" => true, "msg" => "product inserted"]);
         http_response_code(201);
     } catch (Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        echo json_encode($ex->getMessage());
         die();
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }

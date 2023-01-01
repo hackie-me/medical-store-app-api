@@ -7,7 +7,7 @@ require '../../config/config.php';
 $validator = new Validator;
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Authenticating user  
     if (!empty($fun)) {
@@ -26,16 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
     // fetching review by product id  
     if (!empty($db)) {
         $data = $db->from('review')->where('pid')->is($request->pid)->select()->all();
+        echo json_encode($data);
+    }else{
+        http_response_code(500);
     }
-    echo json_encode(["status" => true, "data" => $data]);
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }

@@ -27,7 +27,7 @@ function getRequestData(Validator $validator): mixed
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -53,8 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$result && $result_count != 1) {
-        echo json_encode(["status" => false, "msg" => "invalid credentials"]);
-        http_response_code(400);
+        http_response_code(401);
     } else {
         if (password_verify($request->password, $result['password'])) {
             $token = null;
@@ -65,13 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 http_response_code(500);
             }
             // sending response
-            echo json_encode(["status" => true, "token" => $token]);
+            echo json_encode($token);
         } else {
-            echo json_encode(["status" => false, "msg" => "Invalid password"]);
-            http_response_code(400);
+            http_response_code(401);
         }
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

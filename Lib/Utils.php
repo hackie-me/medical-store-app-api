@@ -23,7 +23,7 @@ class Utils
             self::$db = new Database($connection);
         } catch (PDOException $ex) {
             http_response_code(500);
-            echo json_encode(['success' => false, 'msg' => $ex->getMessage()]);
+            echo json_encode($ex->getMessage());
             die();
         }
     }
@@ -62,17 +62,14 @@ class Utils
                     $data = (array)$data->data;
                     if($admin){
                         return Utils::authenticate_user("admin", "id", $data['id'], $data);
-                    }else{
-                        return Utils::authenticate_user("user", "userid", $data['id'], $data);
                     }
                 } else {
                     http_response_code(401);
-                    echo json_encode(['success' => false, 'msg' => 'Unauthorized']);
                     exit();
                 }
             } catch (Exception $ex) {
                 http_response_code(401);
-                echo json_encode(['success' => false, 'msg' => $ex->getMessage()]);
+                echo json_encode($ex->getMessage());
                 exit();
             }
 
@@ -86,12 +83,11 @@ class Utils
                 return $data;
             } else {
                 http_response_code(401);
-                echo json_encode(['success' => false, 'msg' => 'Unauthorized']);
                 exit();
             }
         } else {
             http_response_code(500);
-            echo json_encode(['success' => false, 'msg' => 'Database connection error']);
+            echo json_encode('Database connection error');
             exit();
         }
     }

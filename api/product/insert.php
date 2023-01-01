@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = null;
     // Authenticating user   
     if (!empty($fun)) {
-        $user = $fun->verify_token();
+        $user = $fun->verify_token(true);
     }else{
         http_response_code(500);
     }
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -57,15 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'thumbnail' => base64_encode($request->thumbnail),
                 'images' => $request->images,
                 'ingredients' => $request->ingredients,
-            ))->into('product');
-            echo json_encode(["status" => true, "msg" => "product inserted"]);
+            ))->into('products');
+            echo json_encode(["product inserted"]);
             http_response_code(201);
         }
     } catch (Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        echo json_encode($ex->getMessage());
         die();
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }

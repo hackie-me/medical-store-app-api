@@ -7,7 +7,7 @@ require '../../config/config.php';
 $validator = new Validator;
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Authenticating user  
     if (!empty($fun)) {
@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // fetching all reviews 
     if (!empty($db)) {
         $data = $db->from('review')->select()->all();
+        echo json_encode($data);
+    }else{
+        http_response_code(500);
     }
-    echo json_encode(["status" => true, "data" => $data]);
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

@@ -10,7 +10,7 @@ $validator = new Validator;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = null;
     if (!empty($fun)) {
-        $user  =  $fun->verify_token();
+        $user  =  $fun->verify_token(true);
     }else{
         http_response_code(500);
     }
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -44,10 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'discount' => $request->discount,
                 'code' => $request->code
             ));
-        echo json_encode(["status" => true, "msg" => "Offer updated"]);
+        http_response_code(204);
     }
 
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

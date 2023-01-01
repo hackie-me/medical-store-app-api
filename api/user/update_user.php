@@ -4,6 +4,7 @@ use Rakit\Validation\Validator;
 
 require '../../config/config.php';
 $validator = new Validator;
+$user = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -32,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
 
     // Updating user
-    if (!empty($db) && !empty($fun)) {
+    if (!empty($db) && !empty($fun) && !empty($user)) {
         $result = $db->update('user')
             ->where('userid')->is($user[0]) // ['userid']
             ->set(array(
@@ -63,12 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = $fun->generate_token($result);
 
             // sending response
-            echo json_encode(["status" => true, "token" => $token]);
+            echo json_encode($token);
         }else{
             http_response_code(500);
         }
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }

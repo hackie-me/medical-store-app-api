@@ -8,18 +8,18 @@ $validator = new Validator;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Authenticating user  
+    // Authenticating user
     if (!empty($fun)) {
-        // TODO: order can be deleted by both admin and user
         $user = $fun->verify_token();
     }
-    
+
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
-    // request validator 
+    // request validator
     $validation = $validator->make((array)$request, [
-        'id' => 'required',
+        'id' => 'required|integer',
+        'status' => 'required',
     ]);
 
     $validation->validate();
@@ -32,14 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting category from database  
+    // updating product
     try {
         if (!empty($db)) {
-            $db->from('order')->Where("id")->is($request->id)->delete();
+            $result = $db->update('products')
+                ->where('id')->is($request->id)
+                ->set(array(
+                    'status' => $request->status,
+                ));
         }
+        http_response_code(204);
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
-        die();
+        http_response_code(500);
     }
 } else {
     http_response_code(405);

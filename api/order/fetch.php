@@ -6,10 +6,11 @@ require '../../config/config.php';
 $validator = new Validator;
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Authenticating user  
     if (!empty($fun)) {
+        // TODO: order can be fetched by both admin and user
         $fun->verify_token();
     }else{
         http_response_code(500);
@@ -22,8 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }else{
         http_response_code(500);
     }
-    echo json_encode(["status" => true, "data" => $data]);
+    echo json_encode($data);
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
     if (!empty($fun)) {
-        $user = $fun->verify_token();
+        $user = $fun->verify_token(true);
     }else{
         http_response_code(500);
     }
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -38,16 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (!empty($db)) {
             $db->from('offer')->Where("id")->is($request->id)->delete();
-            echo json_encode(["status" => true, "msg" => "Offer Deleted"]);
         }else{
             http_response_code(500);
         }
     } catch (Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        echo json_encode($ex->getMessage());
         http_response_code(500);
         die();
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

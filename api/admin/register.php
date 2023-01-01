@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ->select()
             ->count();
         if ($uniq > 0) {
-            echo json_encode(["success" => false, "msg" => "admin already exist"]);
+            http_response_code(409);
             exit;
         }else{
             // creating new user
@@ -61,12 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // generating new user token
             $token = $fun->generate_token($result);
             // sending response
-            echo json_encode(["status" => true, "token" => $token]);
+            echo json_encode($token);
         }
     }else{
         http_response_code(500);
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
     http_response_code(405);
 }

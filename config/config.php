@@ -28,6 +28,6 @@ try {
     $mail->AltBody = MAIL_ALT_BODY;
 } catch (Exception $ex) {
     http_response_code(500);
-    echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+    echo json_encode($ex->getMessage());
     die();
 }

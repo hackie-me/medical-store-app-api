@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // handling request errors
     if ($validation->fails()) {
         $errors = $validation->errors();
-        echo json_encode(["success" => false, "msg" => $errors->firstOfAll()]);
+        echo json_encode($errors->firstOfAll());
         http_response_code(406);
         exit;
     }
@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (!empty($db)) {
             $db->from('review')->Where("id")->is($request->id)->delete();
+            http_response_code(204);
         }
-        echo json_encode(["status" => true, "msg" => "review Deleted"]);
     } catch (Exception $ex) {
-        echo json_encode(["success" => false, "msg" => $ex->getMessage()]);
+        echo json_encode($ex->getMessage());
         die();
     }
 } else {
-    echo json_encode(["status" => false, "msg" => "Method not allowed"]);
+    
     http_response_code(405);
 }
