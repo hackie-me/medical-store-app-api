@@ -25,13 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'price' => 'required',
         'mrp' => 'required',
         'discount' => 'required',
-        'quantity' => 'required',
-        'brand_id' => 'required',
+        'brand_name' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
         'thumbnail' => 'required',
         'images' => 'required|array',
         'images.*' => 'required',
         'ingredients' => 'required',
+        'status' => 'required',
+        'unit' => 'required',
+        'stock' => 'required',
+        'category_id' => 'required',
     ]);
 
     $validation->validate();
@@ -53,12 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'price' => $request->price,
                 'mrp' => $request->mrp,
                 'discount' => $request->discount,
-                'quantity' => $request->quantity,
                 'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
-                'expiry_data' => $request->expiry_date,
+                'expiry_date' => $request->expiry_date,
                 'thumbnail' => $fun->upload_image($request->thumbnail, 'product/thumbnail'),
                 'images' => json_encode($fun->bulk_upload_image($request->images, 'product/images')),
                 'ingredients' => $request->ingredients,
+                'status' => $request->status,
+                'unit' => $request->unit,
+                'stock' => $request->stock,
+                'category_id' => $request->category_id,
             ))->into('products');
             http_response_code(201);
         }

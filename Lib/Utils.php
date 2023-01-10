@@ -136,10 +136,9 @@ class Utils
     // Function to delete image
     public function delete_media($imagePath): void
     {
-        $image = STORAGE_PATH . "image/$imagePath";
         try {
             // Delete the image
-            unlink($image);
+            unlink($imagePath);
         } catch (Exception $ex) {
             http_response_code(500);
             echo json_encode($ex->getMessage());
