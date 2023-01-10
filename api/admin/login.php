@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 http_response_code(500);
             }
             // sending response
-            echo json_encode($token);
+            echo $token;
         } else {
             http_response_code(401);
         }

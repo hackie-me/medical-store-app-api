@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // creating new user
             $result = $db->insert(array(
                 'name' => $request->name,
-                'image' => "default.jpg",
+                'image' => "https://via.placeholder.com/100",
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => password_hash($request->password, PASSWORD_BCRYPT)
@@ -58,10 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ->where('phone')->is($request->phone)->select()
                 ->first();
 
-            // generating new user token
-            $token = $fun->generate_token($result);
-            // sending response
-            echo json_encode($token);
+            // sending response and generating token
+            http_response_code(201);
+            echo $fun->generate_token($result);
         }
     }else{
         http_response_code(500);

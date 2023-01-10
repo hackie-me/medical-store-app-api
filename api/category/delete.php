@@ -27,18 +27,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // handling request errors
     if ($validation->fails()) {
-        $errors = $validation->errors();
-        echo json_encode($errors->firstOfAll());
-        http_response_code(406);
-        exit;
+        $errors = $validation->errors(); 
+        echo json_encode($errors->firstOfAll()); 
+        http_response_code(406); 
+        exit; 
     }
 
     // deleting category from database  
     try {
-        if (!empty($db)) {
+        if (!empty($db) && isset($fun)) {
+            // Get Product Thumbnail and Images
+            $product = $db->from('products')->where('id')->is($request->id)->select()->first();
+
+            // Delete Product Thumbnail and Images
+            $fun->delete_media($product->thumbnail);
+            $fun->bulk_delete_media($product->images);
             $db->from('products')->Where("category_id")->is($request->id)->delete();
             $db->from('category')->Where("id")->is($request->id)->delete();
-            echo json_encode(["Category Deleted"]);
+            $fun->delete_media($request->thumbnail);
         }else{
             http_response_code(500);
         }

@@ -21,15 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // request validator 
     $validation = $validator->make((array)$request, [
         'name' => 'required',
+        'description' => 'required',
         'price' => 'required',
         'mrp' => 'required',
         'discount' => 'required',
         'quantity' => 'required',
-        'brand_name' => 'required',
+        'brand_id' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
-        'thumbnail' => 'required|extension:0,500K,png,jpeg',
+        'thumbnail' => 'required',
         'images' => 'required|array',
-        'images.*' => 'uploaded_file:0,500K,png,jpeg',
+        'images.*' => 'required',
         'ingredients' => 'required',
     ]);
 
@@ -45,20 +46,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // inserting records into database 
     try {
-        if (!empty($db)) {
+        if (!empty($db) && isset($fun)) {
             $result = $db->insert(array(
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
                 'mrp' => $request->mrp,
                 'discount' => $request->discount,
                 'quantity' => $request->quantity,
                 'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
                 'expiry_data' => $request->expiry_date,
-                'thumbnail' => base64_encode($request->thumbnail),
-                'images' => $request->images,
+                'thumbnail' => $fun->upload_image($request->thumbnail, 'product/thumbnail'),
+                'images' => json_encode($fun->bulk_upload_image($request->images, 'product/images')),
                 'ingredients' => $request->ingredients,
             ))->into('products');
-            echo json_encode(["product inserted"]);
             http_response_code(201);
         }
     } catch (Exception $ex) {

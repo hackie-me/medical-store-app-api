@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator 
     $validation = $validator->make((array)$request, [
-        'id' => 'required|integer',
+        'id' => 'required',
         'name' => 'required',
         'description' => 'required',
         'image' => 'required',

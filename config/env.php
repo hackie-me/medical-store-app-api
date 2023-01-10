@@ -28,3 +28,6 @@ CONST MAIL_IS_SMTP = true;
 // PATH Configuration
 define('STORAGE_PATH', "{$_SERVER['DOCUMENT_ROOT']}/nms/storage/");
 define('ROOT_PATH', "{$_SERVER['DOCUMENT_ROOT']}/nms/");
+
+// server url
+const SERVER_URL = "http://192.168.1.2/nms/";
