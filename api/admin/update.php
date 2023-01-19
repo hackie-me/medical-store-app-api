@@ -23,8 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // request validator 
     $validation = $validator->make((array)$request, [
         'name' => 'required',
-        'image' => 'required|mimes:jpeg,png,jpg,gif,svg',
-        'phone' => 'required|min:10|max:10',
+        'phone' => 'required',
         'email' => 'required|email',
     ]);
 
@@ -54,10 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // generating new user token
         if ($result) {
-            // generating new user token
-            $token = $fun->generate_token($result);
             // sending response
-            echo json_encode($token);
+            http_response_code(204);
+            echo $fun->generate_token($result);
         }
     }else{
         http_response_code(500);

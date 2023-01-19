@@ -4,7 +4,10 @@ use Rakit\Validation\Validator;
 
 require '../../config/config.php';
 $validator = new Validator;
-
+if (empty($fun) || empty($db)) {
+    http_response_code(500);
+    die('No function name provided!');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = null;
@@ -28,8 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'brand_name' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
         'thumbnail' => 'required',
-        'images' => 'required|array',
-        'images.*' => 'required',
         'ingredients' => 'required',
         'status' => 'required',
         'unit' => 'required',
@@ -59,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
                 'expiry_date' => $request->expiry_date,
                 'thumbnail' => $fun->upload_image($request->thumbnail, 'product/thumbnail'),
-                'images' => json_encode($fun->bulk_upload_image($request->images, 'product/images')),
+                'images' => "",
                 'ingredients' => $request->ingredients,
                 'status' => $request->status,
                 'unit' => $request->unit,

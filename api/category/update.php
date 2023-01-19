@@ -4,15 +4,14 @@ use Rakit\Validation\Validator;
 
 require '../../config/config.php';
 $validator = new Validator;
-
+if (empty($fun) || empty($db)) {
+    http_response_code(500);
+    die('No function name provided!');
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    if (!empty($fun)) {
-        $user = $fun->verify_token(true);
-    }else{
-        http_response_code(500);
-    }
+    $user = $fun->verify_token(true);
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
@@ -22,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'id' => 'required',
         'name' => 'required',
         'description' => 'required',
-        'image' => 'required',
     ]);
 
     $validation->validate();
@@ -37,18 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // inserting records into database 
     try {
-        if (!empty($db)) {
-            $result = $db->update('category')
+        $result = $db->update('category')
             ->where('id')->is($request->id)
             ->set(array(
                 'name' => $request->name,
-                'description' => $request->description,
-                'image' => $request->image
+                'description' => $request->description
             ));
-            http_response_code(204);
-        }else{
-            http_response_code(500);
-        }
+        http_response_code(204);
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
         http_response_code(500);

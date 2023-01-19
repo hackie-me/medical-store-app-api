@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `image` Longtext NOT NULL,
+  `image` Longtext NOT NULL DEFAULT "https://i.pravatar.cc/150",
   `phone` varchar(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,

@@ -5,7 +5,10 @@ use Rakit\Validation\Validator;
 
 require '../../config/config.php';
 $validator = new Validator;
-
+if (empty($fun) || empty($db)) {
+    http_response_code(500);
+    die('No function name provided!');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = null;
@@ -19,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator  
     $validation = $validator->make((array)$request, [
-        'image' => 'required|max:255',
+        'images' => 'required|max:255',
         'discount' => 'required',
         'code' => 'required',
     ]);
@@ -40,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ->where('uid')->is($user[0]) // ['userid']
             ->andWhere('pid')->is($request->pid)
             ->set(array(
-                'image' => base64_encode($request->image),
+                'images' => base64_encode($request->image),
                 'discount' => $request->discount,
                 'code' => $request->code
             ));

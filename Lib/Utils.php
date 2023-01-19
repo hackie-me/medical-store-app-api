@@ -4,6 +4,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Opis\Database\Connection;
 use Opis\Database\Database;
+use Rakit\Validation\Validator;
 use Spatie\ImageOptimizer\OptimizerChain;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
 
@@ -29,7 +30,7 @@ class Utils
         }
     }
 
-    // getter for $db
+    // Get Database Connection
     public function getDb(): Database
     {
         return self::$db;
@@ -76,8 +77,26 @@ class Utils
         return null;
     }
 
-    // function to decode token
+    // Function to refresh token
+    public static function refresh_token($table, $column, $id, $data)
+    {
+        $result = self::$db->from($table)
+            ->where($column)->is($id)->select()
+            ->first();
+        if ($result) {
+            if ($result['token'] == $data['token']) {
+                return Utils::generate_token($result);
+            } else {
+                http_response_code(401);
+                exit();
+            }
+        } else {
+            http_response_code(401);
+            exit();
+        }
+    }
 
+    // Function to authenticate user
     public static function authenticate_user($table, $column, $value, $data)
     {
         if (!empty(self::$db)) {
@@ -90,68 +109,32 @@ class Utils
             }
         } else {
             http_response_code(500);
-            echo json_encode('Database connection error');
             exit();
         }
     }
 
-
-    // function to upload image and return image url
-    public function upload_image($imageBase64, $path): string
+    // Function to check if Image is present or not
+    public function check_image(): void
     {
-        // Split the string on the ";" character
-        $parts = explode(';', str_replace('data:', '', $imageBase64));
-
-        // Get the file extension
-        $extension = explode('/', $parts[0])[1];
-
-        // Generate a unique name for the image
-        $imageName = uniqid() . '.' . $extension;
-        $imagePath = $path. '/' . $imageName;
-        $image = STORAGE_PATH . "image/$imagePath";
-        try {
-            // Save the image
-            file_put_contents($image, file_get_contents($imageBase64));
-            // Optimize the image
-            $this->optimizerChain->optimize($image);
-            // return image server url
-            return SERVER_URL . 'storage/image/' . $imagePath;
-        } catch (Exception $ex) {
-            http_response_code(500);
-            echo json_encode($ex->getMessage());
+        if (!isset($_FILES['image'])) {
+            http_response_code(400);
             exit();
         }
     }
 
-    // Function to Bulk upload image and return json array of image url
-    public function bulk_upload_image($imageBase64, $path): string
+    // Function to validate last record id
+    public function validate_last_id($id): void
     {
-        $imageArray = [];
-        foreach ($imageBase64 as $image) {
-            $imageArray[] = $this->upload_image($image, $path);
-        }
-        return json_encode($imageArray);
-    }
-
-    // Function to delete image
-    public function delete_media($imagePath): void
-    {
-        try {
-            // Delete the image
-            unlink($imagePath);
-        } catch (Exception $ex) {
-            http_response_code(500);
-            echo json_encode($ex->getMessage());
-            exit();
-        }
-    }
-
-    // Function to delete bulk image
-    public function bulk_delete_media($imagePath): void
-    {
-        $imageArray = json_decode($imagePath);
-        foreach ($imageArray as $image) {
-            $this->delete_media($image);
+        $validator = new Validator;
+        $validation = $validator->make(['last_record_id' => $id], [
+            'last_record_id' => 'required|numeric|min:1',
+        ]);
+        $validation->validate();
+        if ($validation->fails()) {
+            $errors = $validation->errors();
+            echo json_encode($errors->firstOfAll());
+            http_response_code(406);
+            exit;
         }
     }
 }

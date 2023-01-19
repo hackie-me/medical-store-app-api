@@ -4,7 +4,10 @@ use Rakit\Validation\Validator;
 
 require '../../config/config.php';
 $validator = new Validator;
-
+if (empty($fun) || empty($db)) {
+    http_response_code(500);
+    die('No function name provided!');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -20,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $validation = $validator->make((array)$request, [
         'name' => 'required',
         'phone' => 'required', 
-        'image' => 'required',
+        'images' => 'required',
     ]);
 
     $validation->validate();
@@ -39,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'name' => $request->name,
             'phone' => $request->phone,
             'message' => $request->msg ?? '',
-            'image' => base64_encode($request->image),
+            'images' => base64_encode($request->image),
         ))->into('contact');
         http_response_code(201);
     }else{

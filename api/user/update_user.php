@@ -5,13 +5,14 @@ use Rakit\Validation\Validator;
 require '../../config/config.php';
 $validator = new Validator;
 $user = null;
-
+if (empty($fun) || empty($db)) {
+    http_response_code(500);
+    die('No function name provided!');
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // verifying user token
-    if (!empty($fun)) {
-        $user = $fun->verify_token();
-    }
+    $user = $fun->verify_token();
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);

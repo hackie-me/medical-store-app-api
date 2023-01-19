@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // creating new user
             $result = $db->insert(array(
                 'name' => $request->name,
-                'image' => "https://via.placeholder.com/100",
+                'images' => "https://via.placeholder.com/100",
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => password_hash($request->password, PASSWORD_BCRYPT)
