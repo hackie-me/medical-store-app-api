@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // request validator 
     $validation = $validator->make((array)$request, [
         'name' => 'required',
-        'description' => 'required',
+        'description' => 'nullable',
     ]);
 
     $validation->validate();
@@ -42,11 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $result = $db->insert(array(
             'name' => $request->name,
-            'description' => $request->description,
-            'images' => "https://picsum.photos/200",
+            'description' => $request->description ?? null,
         ))->into('category');
         http_response_code(201);
+        // get last insert id and return it
+        echo $db->getConnection()->getPDO()->lastInsertId();
     } catch (Exception $ex) {
+        http_response_code(500);
         echo json_encode($ex->getMessage());
         die();
     }

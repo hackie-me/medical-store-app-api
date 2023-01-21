@@ -12,19 +12,16 @@ if (empty($fun) || empty($db)) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Authenticating user  
-    if (!empty($fun)) {
-        $fun->verify_token();
-    }else{
-        http_response_code(500);
-    }
+    $fun->verify_token();
 
     // fetching category data  
-    if (!empty($db)) {
-        $data = $db->from('products')->select()->all();
-        echo json_encode($data);
-    }else{
-        http_response_code(500);
+    $data = $db->from('products')->select()->all();
+    foreach ($data as $key => $value) {
+        if (empty($value['image'])) {
+            $data[$key]['thumbnail'] = "https://source.unsplash.com/random?{$value['name']}";
+        }
     }
+    echo json_encode($data);
 } else {
     
     http_response_code(405);

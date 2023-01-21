@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // request validator 
     $validation = $validator->make((array)$request, [
         'name' => 'required',
-        'phone' => 'required|min:10|max:10',
+        'phone' => 'required|numeric',
         'email' => 'required|email',
-        'password' => 'required|min:6',
+        'password' => 'required',
         'confirm_password' => 'required|same:password'
     ]);
 
@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // creating new user
             $result = $db->insert(array(
                 'name' => $request->name,
-                'images' => "https://via.placeholder.com/100",
                 'phone' => $request->phone,
                 'email' => $request->email,
                 'password' => password_hash($request->password, PASSWORD_BCRYPT)

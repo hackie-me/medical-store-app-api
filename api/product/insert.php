@@ -12,11 +12,7 @@ if (empty($fun) || empty($db)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = null;
     // Authenticating user   
-    if (!empty($fun)) {
-        $user = $fun->verify_token(true);
-    }else{
-        http_response_code(500);
-    }
+    $user = $fun->verify_token(true);
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
@@ -30,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'discount' => 'required',
         'brand_name' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
-        'thumbnail' => 'required',
         'ingredients' => 'required',
         'status' => 'required',
         'unit' => 'required',
@@ -50,25 +45,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // inserting records into database 
     try {
-        if (!empty($db) && isset($fun)) {
-            $result = $db->insert(array(
-                'name' => $request->name,
-                'description' => $request->description,
-                'price' => $request->price,
-                'mrp' => $request->mrp,
-                'discount' => $request->discount,
-                'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
-                'expiry_date' => $request->expiry_date,
-                'thumbnail' => $fun->upload_image($request->thumbnail, 'product/thumbnail'),
-                'images' => "",
-                'ingredients' => $request->ingredients,
-                'status' => $request->status,
-                'unit' => $request->unit,
-                'stock' => $request->stock,
-                'category_id' => $request->category_id,
-            ))->into('products');
-            http_response_code(201);
-        }
+        $result = $db->insert(array(
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'mrp' => $request->mrp,
+            'discount' => $request->discount,
+            'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
+            'expiry_date' => $request->expiry_date,
+            'images' => json_encode([""]),
+            'ingredients' => $request->ingredients,
+            'status' => $request->status,
+            'unit' => $request->unit,
+            'stock' => $request->stock,
+            'category_id' => $request->category_id,
+        ))->into('products');
+        http_response_code(201);
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
         die();

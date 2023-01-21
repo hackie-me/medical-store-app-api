@@ -12,9 +12,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // fetching all category data  
     $data = $db->from('category')->select()->all();
     foreach ($data as $key => $value) {
-        $data[$key]['image'] = json_decode($value['images']);
+        $data[$key]['image'] = json_decode($value['image']);
+    }
+
+    // If image is blank then set default image
+    foreach ($data as $key => $value) {
+        if (empty($value['image'])) {
+            $data[$key]['image'] = "https://source.unsplash.com/random?{$value['name']}";
+        }
     }
     echo json_encode($data);
+
 } else {
     http_response_code(405);
 }

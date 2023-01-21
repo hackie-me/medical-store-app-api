@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `image` Longtext NOT NULL DEFAULT "https://i.pravatar.cc/150",
+  `image` Longtext NOT NULL DEFAULT '',
   `phone` varchar(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `image` LONGTEXT NOT NULL,
+  `image` LONGTEXT NOT NULL DEFAULT '',
   `description` varchar(255) NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `name` varchar(255) NOT NULL,
   `phone` varchar(11) NOT NULL,
   `msg` longtext NOT NULL,
-  `image` longtext NOT NULL,
+  `image` longtext NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `offers` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT '',
-  `image` longtext NOT NULL,
+  `image` longtext NOT NULL DEFAULT '',
   `price` varchar(255) NULL,
   `discount` varchar(255) NOT NULL,
   `discount_price` varchar(255) NOT NULL,
@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS `products` (
   `discount` varchar(100) NOT NULL DEFAULT '0',
   `brand_name` varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
   `expiry_date` date NOT NULL,
-  `thumbnail` longtext NOT NULL,
-  `images` longtext NOT NULL,
+  `thumbnail` longtext NOT NULL DEFAULT '',
+  `images` json NOT NULL DEFAULT '',
   `ingredients` text NOT NULL,
   `status` varchar(255) NOT NULL DEFAULT 'active',
   `unit` varchar(255) NOT NULL DEFAULT 'Piece',
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `social_id` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `image` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`userid`),
