@@ -135,3 +135,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `users_mail_hash_unique` (`mail_hash`)
 );
+
+DROP TABLE IF EXISTS `faq`;
+CREATE TABLE IF NOT EXISTS `faq` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `question` text NOT NULL,
+  `answer` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);

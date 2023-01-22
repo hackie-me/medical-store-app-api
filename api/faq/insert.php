@@ -11,15 +11,16 @@ if (empty($fun) || empty($db)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $user  =  $fun->verify_token();
+    // Verifying token
+    $user = $fun->verify_token();
+
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
-    // request validator 
+    // request validator
     $validation = $validator->make((array)$request, [
-        'name' => 'required',
-        'phone' => 'required', 
-        'images' => 'required',
+        'question' => 'required',
+        'answer' => 'required',
     ]);
 
     $validation->validate();
@@ -32,15 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Inserting new contact request 
-    $result = $db->insert(array(
-        'name' => $request->name,
-        'phone' => $request->phone,
-        'message' => $request->msg ?? '',
-        'images' => base64_encode($request->image),
-    ))->into('contact');
+    // Inserting new contact request
+    $db->insert(array(
+        'question' => $request->question,
+        'answer' => $request->answer,
+    ))->into('faq');
     http_response_code(201);
-
 } else {
     http_response_code(405);
 }
