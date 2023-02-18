@@ -9,16 +9,9 @@ if (empty($fun) || empty($db)) {
     die('No function name provided!');
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Authenticating user  
-    $user = $fun->verify_token(true);
-
-    $request = file_get_contents("php://input");
-    $request = json_decode($request);
-
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // request validator
-    $validation = $validator->make((array)$request, [
+    $validation = $validator->make($_GET, [
         'id' => 'required',
     ]);
 
@@ -32,15 +25,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting category from database  
-    try {
-        $db->from('products')->Where("id")->is($request->id)->delete();
-        echo json_encode(["Product Deleted"]);
-    } catch (Exception $ex) {
-        echo json_encode($ex->getMessage());
-        http_response_code(500);
-        die();
+    // fetching category data
+    $data = $db->from('products')
+        ->where('id')->is($_GET['id'])
+        ->select()
+        ->all();
+    foreach ($data as $key => $value) {
+        if (empty($value['image'])) {
+            $data[$key]['thumbnail'] = "https://source.unsplash.com/random?{$value['name']}";
+        }
     }
+    echo json_encode($data[0]);
 } else {
+
     http_response_code(405);
 }

@@ -10,10 +10,7 @@ if (empty($fun) || empty($db)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
-    // Authenticating user  
-    $fun->verify_token();
-
+    
     // fetching category data  
     $data = $db->from('products')->select()->all();
     foreach ($data as $key => $value) {
