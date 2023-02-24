@@ -11,7 +11,25 @@ if (empty($fun) || empty($db)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $request = getRequestData($validator);
+    $request = file_get_contents("php://input");
+    $request = json_decode($request);
+
+    // request validator
+    $validation = $validator->make((array)$request, [
+        'phone' => 'required',
+        'password' => 'required',
+    ]);
+
+    $validation->validate();
+
+    // handling request errors
+    if ($validation->fails()) {
+        $errors = $validation->errors();
+        echo json_encode($errors->firstOfAll());
+        http_response_code(406);
+        exit;
+    }
+
 
     // Authenticating 
     $result = $db->from('user')
