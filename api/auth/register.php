@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // generating new user token
         $token = $fun->generate_token($result);
         // sending response
-        echo json_encode($token);
+        echo $token;
     }else{
         http_response_code(500);
     }

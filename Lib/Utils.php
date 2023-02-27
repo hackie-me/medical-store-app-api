@@ -64,17 +64,18 @@ class Utils
                 $data = (array)$data->data;
                 if ($admin) {
                     return Utils::authenticate_user("admin", "id", $data['id'], $data);
+                }else{
+                    return Utils::authenticate_user("user", "userid", $data['userid'], $data);
                 }
             } else {
                 http_response_code(401);
                 exit();
             }
         } catch (Exception $ex) {
-            http_response_code(401);
+            http_response_code(500);
             echo json_encode($ex->getMessage());
             exit();
         }
-        return null;
     }
 
     // Function to refresh token
