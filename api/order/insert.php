@@ -18,15 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator 
     $validation = $validator->make((array)$request, [
-        'name' => 'required',
-        'uid' => 'required|integer',
-        'pid' => 'required|integer',
         'note' => 'required',
-        'quantity' => 'required|integer',
-        'street' => 'required',
-        'area' => 'required',
-        'pincode' => 'required|integer',
-        'pdf' => 'required',
+        'address' => 'required',
         'total' => 'required',
     ]);
 
@@ -40,27 +33,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // inserting records into database 
     try {
-        $result = $db->insert(array(
-            'name' => $request->name,
-            'uid' => $request->uid,
-            'pid' => $request->pid,
-            'note' => $request->note,
-            'quantity' => $request->quantity,
-            'street' => $request->street,
-            'area' => $request->area,
-            'pincode' => $request->pincode,
-            'pdf' => $request->pdf,
-            'total' => $request->total,
-            'status' => "pending",
-        ))->into('products');
+
+        // Get all products from cart by user id
+        $cart = $data = $db->from('cart')->where("uid")->is($user['userid'])->select()->all();
+
+        // Inserting all products from cart to order table
+        foreach ($cart as $key) {
+            // get the product price
+            $product = $db->from('products')->where("id")->is($key['pid'])->select()->first();
+            $price = $product['price'];
+            $total = $price * $key['quantity'];
+            $result = $db->insert(array(
+                "uid" => $user['userid'],
+                "pid" => $key['pid'],
+                "note" => $request->note,
+                "quantity" => $key['quantity'],
+                "address" => $request->address,
+                "total" => $total,
+            ))->into('orders');
+            // Update cart table by deleting all products from cart
+            $db->from('cart')->where("uid")->is($user['userid'])->delete();
+        }
         http_response_code(201);
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
         die();
     }
 } else {
-    
     http_response_code(405);
 }

@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'uid' => $user['userid'],
             'pid' => $request->pid,
             'quantity' => "1",
-            'price' => $request->price
+            'price' => $request->price,
         ))->into('cart');
         http_response_code(201);
         // get last insert id and return it

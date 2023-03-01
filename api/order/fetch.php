@@ -11,21 +11,14 @@ if (empty($fun) || empty($db)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    // Authenticating user  
-    if (!empty($fun)) {
-        // TODO: order can be fetched by both admin and user
-        $fun->verify_token();
-    }else{
-        http_response_code(500);
-    }
+    // Authenticating user
+    $user = $fun->verify_token();
 
     // fetching category data
-    $data = null;
-    if (!empty($db)) {
-        $data = $db->from('order')->select()->all();
-    }else{
-        http_response_code(500);
-    }
+    $data = $db->from('order')
+        ->where("uid")->is($user['userid'])
+        ->andWhere("status")->isNot("cancelled")
+        ->select()->all();
     echo json_encode($data);
 } else {
     http_response_code(405);

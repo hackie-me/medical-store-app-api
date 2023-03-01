@@ -11,12 +11,9 @@ if (empty($fun) || empty($db)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Authenticating user  
-    if (!empty($fun)) {
-        // TODO: order can be deleted by both admin and user
-        $user = $fun->verify_token();
-    }
-    
+    // Authenticating user
+    $user = $fun->verify_token();
+
     $request = file_get_contents("php://input");
     $request = json_decode($request);
 
@@ -35,11 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting category from database  
     try {
-        if (!empty($db)) {
-            $db->from('order')->Where("id")->is($request->id)->delete();
-        }
+        // update order status
+        $result = $db->update('order')
+            ->where("id")->is($request->id)
+            ->set(array(
+                "status" => "cancelled",
+            ));
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
         die();

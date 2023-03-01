@@ -92,12 +92,10 @@ CREATE TABLE IF NOT EXISTS `orders`
     `pid`        varchar(100) NOT NULL DEFAULT '0',
     `note`       varchar(100) NOT NULL DEFAULT '0',
     `quantity`   varchar(100) NOT NULL,
-    `street`     varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
-    `area`       date         NOT NULL,
-    `pincode`    longtext     NOT NULL,
-    `pdf`        longtext     NOT NULL,
+    `address`    varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
+    `pdf`        longtext     NOT NULL DEFAULT '',
     `total`      text         NOT NULL,
-    `status`     varchar(100) NOT NULL DEFAULT 'pending',
+    `status`     varchar(100) NOT NULL DEFAULT 'pending', # pending, processing, delivered, cancelled
     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
@@ -129,13 +127,13 @@ CREATE TABLE IF NOT EXISTS `custom_order`
 DROP TABLE IF EXISTS `cart`;
 CREATE TABLE IF NOT EXISTS `cart`
 (
-    `id`         int          NOT NULL AUTO_INCREMENT,
-    `uid`        varchar(255) NOT NULL,
-    `pid`        varchar(100) NOT NULL,
-    `quantity`   varchar(100) NOT NULL DEFAULT '1',
-    `price`      varchar(100) NOT NULL DEFAULT '0',
-    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `id`           int          NOT NULL AUTO_INCREMENT,
+    `uid`          varchar(255) NOT NULL,
+    `pid`          varchar(100) NOT NULL,
+    `quantity`     varchar(100) NOT NULL DEFAULT '1',
+    `price`        varchar(100) NOT NULL DEFAULT '0',
+    `created_at`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
