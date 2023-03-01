@@ -8,7 +8,6 @@ if (empty($fun) || empty($db)) {
     http_response_code(500);
     die('No function name provided!');
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user
@@ -19,7 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // request validator
     $validation = $validator->make((array)$request, [
-        'id' => 'required',
+        'pid' => 'required',
+        'price' => 'required'
     ]);
 
     $validation->validate();
@@ -32,12 +32,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting Address from database
+    // checking if product already exists in cart
+    $data = $db->from('cart')->where("uid")->is($user['userid'])->where("pid")->is($request->pid)->select()->all();
+    if (count($data) > 0) {
+        http_response_code(406);
+        echo json_encode("Product already exists in cart");
+        die();
+    }
+
+    // inserting records into database
     try {
-        $db->from('address')->Where("id")->is($request->id)->delete();
+        $result = $db->insert(array(
+            'uid' => $user['userid'],
+            'pid' => $request->pid,
+            'quantity' => "1",
+            'price' => $request->price
+        ))->into('cart');
+        http_response_code(201);
+        // get last insert id and return it
+        echo $db->getConnection()->getPDO()->lastInsertId();
     } catch (Exception $ex) {
-        echo json_encode($ex->getMessage());
         http_response_code(500);
+        echo json_encode($ex->getMessage());
         die();
     }
 } else {

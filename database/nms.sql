@@ -125,6 +125,20 @@ CREATE TABLE IF NOT EXISTS `custom_order`
     PRIMARY KEY (`id`)
 );
 
+# Cart Table
+DROP TABLE IF EXISTS `cart`;
+CREATE TABLE IF NOT EXISTS `cart`
+(
+    `id`         int          NOT NULL AUTO_INCREMENT,
+    `uid`        varchar(255) NOT NULL,
+    `pid`        varchar(100) NOT NULL,
+    `quantity`   varchar(100) NOT NULL DEFAULT '1',
+    `price`      varchar(100) NOT NULL DEFAULT '0',
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+);
+
 DROP TABLE IF EXISTS `review`;
 CREATE TABLE IF NOT EXISTS `review`
 (

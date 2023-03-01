@@ -32,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // deleting Address from database
+    // deleting Cart Item from database
     try {
-        $db->from('address')->Where("id")->is($request->id)->delete();
+        $db->from('cart')->Where("id")->is($request->id)->delete();
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
         http_response_code(500);

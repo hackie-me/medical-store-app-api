@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     $user = $fun->verify_token();
 
-    // fetching users address
-    $data = $db->from('address')->where("uid")->is($user['userid'])->select()->all();
+    // fetching all Cart items
+    $data = $db->from('cart')->where("uid")->is($user['userid'])->select()->all();
     echo json_encode($data);
 
 } else {
