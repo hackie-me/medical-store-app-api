@@ -12,9 +12,7 @@ if (empty($fun) || empty($db)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    if (!empty($fun)) {
-        $user = $fun->verify_token(true);
-    }
+    $user = $fun->verify_token();
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
@@ -23,13 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $validation = $validator->make((array)$request, [
         'id' => 'required|integer',
         'name' => 'required',
-        'price' => 'required',
-        'mrp' => 'required',
-        'discount' => 'required',
-        'quantity' => 'required',
+        'phone' => 'required',
+        'email' => 'required',
+        'address' => 'required',
+        'city' => 'required',
+        'state' => 'required',
+        'pincode' => 'required|integer',
+        'product_name' => 'required',
         'brand_name' => 'required',
-        'expiry_date' => 'required|date:d-m-Y',
-        'ingredients' => 'required',
+        'quantity' => 'required|integer',
+        'notes' => 'required',
     ]);
 
     $validation->validate();
@@ -42,25 +43,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // updating product
+    // updating order
     try {
         $result = $db->update('products')
-        ->where('id')->is($request->id)
-        ->set(array(
-            'name' => $request->name,
-            'price' => $request->price,
-            'mrp' => $request->mrp,
-            'discount' => $request->discount,
-            'quantity' => $request->quantity,
-            'brand_name' => $request->brand_name != null ? $request->brand_name : 'Nilkanth Medical',
-            'expiry_data' => $request->expiry_date,
-            'thumbnail' => "https://picsum.photos/200/300",
-            'images' => json_encode([""]),
-            'ingredients' => $request->ingredients,
-        ));
+            ->where('id')->is($request->id)
+            ->set(array(
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'pincode' => $request->pincode,
+                'quantity' => $request->quantity,
+                'uid' => $user['userid'],
+                'updated_at' => date('Y-m-d H:i:s'),
+            ));
         http_response_code(204);
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
+        http_response_code(500);
     }
 } else {
     http_response_code(405);
