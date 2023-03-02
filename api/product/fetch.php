@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // fetching category data
     $data = $db->from('products')->select()->all();
     foreach ($data as $key => $value) {
-        if (empty($value['image'])) {
+        if (empty($value['thumbnail'])) {
             $data[$key]['thumbnail'] = "https://source.unsplash.com/random?{$value['name']}";
         }
     }

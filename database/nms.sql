@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `custom_order`
     `phone`        varchar(100) NOT NULL DEFAULT '0',
     `email`        varchar(100) NOT NULL,
     `address`      varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
-    `city`         date         NOT NULL,
+    `city`         varchar(100) NOT NULL,
     `state`        varchar(100) NOT NULL DEFAULT '',
     `pincode`      varchar(100) NOT NULL DEFAULT '',
     `product_name` varchar(100) NOT NULL DEFAULT '',

@@ -22,13 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $validation = $validator->make((array)$request, [
         'id' => 'required|integer',
         'name' => 'required',
+        'description' => 'required',
         'price' => 'required',
         'mrp' => 'required',
         'discount' => 'required',
-        'quantity' => 'required',
         'brand_name' => 'required',
         'expiry_date' => 'required|date:d-m-Y',
         'ingredients' => 'required',
+        'status' => 'required',
+        'unit' => 'required',
+        'quantity' => 'required',
+        'category_id' => 'required'
     ]);
 
     $validation->validate();
@@ -40,6 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         http_response_code(406);
         exit;
     }
+
+    // Formatting date
+    $request->expiry_date = date('d-m-Y', strtotime($request->expiry_date));
 
     // updating product
     try {
@@ -53,8 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'stock' => $request->quantity,
             'brand_name' => $request->brand_name != null ? $request->brand_name : 'Nilkanth Medical',
             'expiry_date' => $request->expiry_date,
-            'thumbnail' => "https://picsum.photos/200/300",
-            'images' => json_encode([""]),
+            'images' => json_encode(["https://picsum.photos/500/500", "https://picsum.photos/500/500", "https://picsum.photos/500/500", "https://picsum.photos/500/500"]),
             'ingredients' => $request->ingredients,
         ));
         http_response_code(204);

@@ -43,6 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Formatting date
+    $request->expiry_date = date('d-m-Y', strtotime($request->expiry_date));
+
     // inserting records into database 
     try {
         $result = $db->insert(array(
@@ -53,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'discount' => $request->discount,
             'brand_name' => !($request->brand_name == null) ? $request->brand_name : 'Nilkanth Medical',
             'expiry_date' => $request->expiry_date,
-            'images' => json_encode([""]),
+            'images' => json_encode(["https://picsum.photos/500/500", "https://picsum.photos/500/500", "https://picsum.photos/500/500", "https://picsum.photos/500/500"]),
             'ingredients' => $request->ingredients,
             'status' => $request->status,
             'unit' => $request->unit,
