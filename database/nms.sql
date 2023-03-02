@@ -49,12 +49,9 @@ CREATE TABLE IF NOT EXISTS `offers`
     `image`          longtext     NOT NULL DEFAULT '',
     `price`          varchar(255) NULL,
     `discount`       varchar(255) NOT NULL,
-    `discount_price` varchar(255) NOT NULL,
     `start_date`     varchar(255) NOT NULL,
     `end_date`       varchar(255) NOT NULL,
     `status`         varchar(255) NOT NULL DEFAULT 'active',
-    `category_id`    int          NOT NULL,
-    `brand_name`     varchar(255) NOT NULL DEFAULT 'Nilkanth Medical Store',
     `code`           varchar(255) NOT NULL,
     `created_at`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -157,24 +154,15 @@ CREATE TABLE IF NOT EXISTS `user`
     `userid`            bigint UNSIGNED                                               NOT NULL AUTO_INCREMENT,
     `full_name`         varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `address`           varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `city`              varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `state`             varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `zip`               varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
     `phone`             varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    `username`          varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
     `status`            varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
     `email`             varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `mail_hash`         varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `email_verified_at` timestamp                                                     NULL     DEFAULT NULL,
     `password`          varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `social_id`         varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
     `image`             LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci              DEFAULT NULL,
     `created_at`        timestamp                                                     NULL     DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        timestamp                                                     NULL     DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`userid`),
-    UNIQUE KEY `users_username_unique` (`username`),
-    UNIQUE KEY `users_email_unique` (`email`),
-    UNIQUE KEY `users_mail_hash_unique` (`mail_hash`)
+    UNIQUE KEY `users_email_unique` (`email`)
 );
 
 DROP TABLE IF EXISTS `address`;

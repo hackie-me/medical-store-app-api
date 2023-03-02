@@ -1,18 +1,18 @@
 <?php
-// Require config file
-include "../../config/config.php";
 
 use Rakit\Validation\Validator;
-$validator = new Validator;
 
+require '../../config/config.php';
+$validator = new Validator;
+if (empty($fun) || empty($db)) {
+    http_response_code(500);
+    die('No function name provided!');
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user = null;
-    if (!empty($fun)) {
-        $user = $fun->verify_token(true);
-    }else{
-        http_response_code(500);
-    }
-    if($user == null){
+
+    $user = $fun->verify_token(true);
+
+    if ($user == null) {
         http_response_code(403);
         exit();
     }
@@ -38,27 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Updating user
-    if (!empty($db) && !empty($fun)) {
-        $result = $db->update('admin')
-            ->where('id')->is($user[0])
-            ->set(array(
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'email' => $request->email,
-            ));
-        // Getting user info
-        $result = $db->from('admin')
-            ->where('phone')->is($request->phone)->select()
-            ->first();
+    $result = $db->update('admin')
+        ->where('id')->is($user[0])
+        ->set(array(
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+        ));
 
-        // generating new user token
-        if ($result) {
-            // sending response
-            http_response_code(204);
-            echo $fun->generate_token($result);
-        }
-    }else{
-        http_response_code(500);
+    // Getting user info
+    $result = $db->from('admin')
+        ->where('phone')->is($request->phone)->select()
+        ->first();
+
+    echo "sdfsdf";
+    print_r($result);
+
+    // generating new user token
+    if ($result) {
+        // sending response
+        http_response_code(204);
+        $token = $fun->generate_token($result);
+        echo "token";
+        echo $token;
     }
 } else {
     http_response_code(405);

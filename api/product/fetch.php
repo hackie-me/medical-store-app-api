@@ -10,8 +10,8 @@ if (empty($fun) || empty($db)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    
-    // fetching category data  
+
+    // fetching category data
     $data = $db->from('products')->select()->all();
     foreach ($data as $key => $value) {
         if (empty($value['image'])) {

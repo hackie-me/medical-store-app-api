@@ -7,6 +7,7 @@
       "ext-pdo": "*",
         "phpmailer/phpmailer": "^6.7",
         "spatie/image-optimizer": "^1.6",
-      "ext-apache": "*"
+      "ext-apache": "*",
+      "ext-http": "*"
     }
 }

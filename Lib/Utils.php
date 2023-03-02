@@ -114,21 +114,12 @@ class Utils
         }
     }
 
-    // Function to check if Image is present or not
-    public function check_image(): void
-    {
-        if (!isset($_FILES['image'])) {
-            http_response_code(400);
-            exit();
-        }
-    }
-
     // Function to validate last record id
     public function validate_last_id($id): void
     {
         $validator = new Validator;
         $validation = $validator->make(['last_record_id' => $id], [
-            'last_record_id' => 'required|numeric|min:1',
+            'last_record_id' => 'required|min:1',
         ]);
         $validation->validate();
         if ($validation->fails()) {
