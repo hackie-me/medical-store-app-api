@@ -12,7 +12,7 @@ if (empty($fun) || empty($db)) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // fetching all orders
-    $data = $db->from('order')->select()->all();
+    $data = $db->from('custom_order')->select()->all();
     echo json_encode($data);
 } else {
     http_response_code(405);
