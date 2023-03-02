@@ -12,7 +12,7 @@ if (empty($fun) || empty($db)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verifying token
-    $user = $fun->verify_token();
+    $user = $fun->verify_token(true);
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);

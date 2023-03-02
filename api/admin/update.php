@@ -51,15 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ->where('phone')->is($request->phone)->select()
         ->first();
 
-    echo "sdfsdf";
-    print_r($result);
-
     // generating new user token
     if ($result) {
         // sending response
         http_response_code(204);
         $token = $fun->generate_token($result);
-        echo "token";
         echo $token;
     }
 } else {
