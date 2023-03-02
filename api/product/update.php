@@ -12,9 +12,8 @@ if (empty($fun) || empty($db)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Authenticating user  
-    if (!empty($fun)) {
-        $user = $fun->verify_token(true);
-    }
+    $user = $fun->verify_token(true);
+
 
     $request = file_get_contents("php://input");
     $request = json_decode($request);
@@ -51,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'price' => $request->price,
             'mrp' => $request->mrp,
             'discount' => $request->discount,
-            'quantity' => $request->quantity,
+            'stock' => $request->quantity,
             'brand_name' => $request->brand_name != null ? $request->brand_name : 'Nilkanth Medical',
-            'expiry_data' => $request->expiry_date,
+            'expiry_date' => $request->expiry_date,
             'thumbnail' => "https://picsum.photos/200/300",
             'images' => json_encode([""]),
             'ingredients' => $request->ingredients,

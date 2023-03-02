@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'ingredients' => 'required',
         'status' => 'required',
         'unit' => 'required',
-        'stock' => 'required',
+        'quantity' => 'required',
         'category_id' => 'required',
     ]);
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'ingredients' => $request->ingredients,
             'status' => $request->status,
             'unit' => $request->unit,
-            'stock' => $request->stock,
+            'stock' => $request->quantity,
             'category_id' => $request->category_id,
         ))->into('products');
         http_response_code(201);

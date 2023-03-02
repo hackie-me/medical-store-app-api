@@ -11,9 +11,6 @@ if (empty($fun) || empty($db)) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    // Authenticating user
-    $fun->verify_token();
-
     // fetching all orders
     $data = $db->from('order')->select()->all();
     echo json_encode($data);

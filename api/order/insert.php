@@ -44,10 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $product = $db->from('products')->where("id")->is($key['pid'])->select()->first();
             $price = $product['price'];
             $total = $price * $key['quantity'];
+            // Generate random Invoice number
+            $rand_num = rand(1000, 9999); // Generate a random 4-digit number
             $result = $db->insert(array(
                 "uid" => $user['userid'],
                 "pid" => $key['pid'],
                 "note" => $request->note,
+                "pdf" => $rand_num,
                 "quantity" => $key['quantity'],
                 "address" => $request->address,
                 "total" => $total,
