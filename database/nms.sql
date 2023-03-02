@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `admin`
 (
     `id`         int          NOT NULL AUTO_INCREMENT,
     `name`       varchar(255) NOT NULL,
-    `image`      Longtext     NOT NULL DEFAULT '',
+    `image`      varchar(255) NOT NULL DEFAULT '',
     `phone`      varchar(11)  NOT NULL,
     `email`      varchar(255) NOT NULL,
     `password`   varchar(255) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `category`
 (
     `id`          int          NOT NULL AUTO_INCREMENT,
     `name`        varchar(255) NOT NULL,
-    `image`       LONGTEXT     NOT NULL DEFAULT '',
+    `image`       varchar(255) NOT NULL DEFAULT '',
     `description` varchar(255) NULL,
     `created_at`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -35,26 +35,26 @@ CREATE TABLE IF NOT EXISTS `contact`
     `id`    int          NOT NULL AUTO_INCREMENT,
     `name`  varchar(255) NOT NULL,
     `phone` varchar(11)  NOT NULL,
-    `msg`   longtext     NOT NULL,
-    `image` longtext     NOT NULL DEFAULT '',
+    `msg`   varchar(500) NOT NULL DEFAULT '',
+    `image` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `offers`;
 CREATE TABLE IF NOT EXISTS `offers`
 (
-    `id`             int          NOT NULL AUTO_INCREMENT,
-    `name`           varchar(255) NOT NULL,
-    `description`    varchar(255)          DEFAULT '',
-    `image`          longtext     NOT NULL DEFAULT '',
-    `price`          varchar(255) NULL,
-    `discount`       varchar(255) NOT NULL,
-    `start_date`     varchar(255) NOT NULL,
-    `end_date`       varchar(255) NOT NULL,
-    `status`         varchar(255) NOT NULL DEFAULT 'active',
-    `code`           varchar(255) NOT NULL,
-    `created_at`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`     timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `id`          int          NOT NULL AUTO_INCREMENT,
+    `name`        varchar(255) NOT NULL,
+    `description` varchar(255)          DEFAULT '',
+    `image`       varchar(255) NOT NULL DEFAULT '',
+    `price`       varchar(255) NULL,
+    `discount`    varchar(255) NOT NULL,
+    `start_date`  varchar(255) NOT NULL,
+    `end_date`    varchar(255) NOT NULL,
+    `status`      varchar(255) NOT NULL DEFAULT 'active',
+    `code`        varchar(255) NOT NULL,
+    `created_at`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
@@ -62,16 +62,16 @@ DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products`
 (
     `id`          int          NOT NULL AUTO_INCREMENT,
-    `name`        text         NOT NULL,
-    `description` text         NOT NULL,
+    `name`        varchar(255) NOT NULL DEFAULT '',
+    `description` varchar(255) NOT NULL DEFAULT '',
     `price`       varchar(255) NOT NULL DEFAULT '0',
     `mrp`         varchar(100) NOT NULL DEFAULT '0',
     `discount`    varchar(100) NOT NULL DEFAULT '0',
     `brand_name`  varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
     `expiry_date` date         NOT NULL,
-    `thumbnail`   longtext     NOT NULL DEFAULT '',
-    `images`      json         NOT NULL DEFAULT '',
-    `ingredients` text         NOT NULL,
+    `thumbnail`   varchar(255) NOT NULL DEFAULT '',
+    `images`      json         NOT NULL,
+    `ingredients` varchar(255) NOT NULL DEFAULT '',
     `status`      varchar(255) NOT NULL DEFAULT 'active',
     `unit`        varchar(255) NOT NULL DEFAULT 'Piece',
     `stock`       varchar(255) NOT NULL DEFAULT '1',
@@ -90,8 +90,8 @@ CREATE TABLE IF NOT EXISTS `orders`
     `note`       varchar(100) NOT NULL DEFAULT '0',
     `quantity`   varchar(100) NOT NULL,
     `address`    varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
-    `pdf`        longtext     NOT NULL DEFAULT '',
-    `total`      text         NOT NULL,
+    `pdf`        varchar(255) NOT NULL DEFAULT '',
+    `total`      varchar(100) NOT NULL DEFAULT '',
     `status`     varchar(100) NOT NULL DEFAULT 'pending', # pending, processing, delivered, cancelled
     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -108,12 +108,12 @@ CREATE TABLE IF NOT EXISTS `custom_order`
     `email`        varchar(100) NOT NULL,
     `address`      varchar(500) NOT NULL DEFAULT 'Nilkanth Medical',
     `city`         date         NOT NULL,
-    `state`        longtext     NOT NULL,
-    `pincode`      longtext     NOT NULL,
-    `product_name` text         NOT NULL,
-    `brand_name`   text         NOT NULL,
-    `quantity`     text         NOT NULL,
-    `notes`        text         NOT NULL,
+    `state`        varchar(100) NOT NULL DEFAULT '',
+    `pincode`      varchar(100) NOT NULL DEFAULT '',
+    `product_name` varchar(100) NOT NULL DEFAULT '',
+    `brand_name`   varchar(100) NOT NULL DEFAULT '',
+    `quantity`     varchar(100) NOT NULL DEFAULT '',
+    `notes`        varchar(999) NOT NULL DEFAULT '',
     `status`       varchar(100) NOT NULL DEFAULT 'pending',
     `created_at`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -137,30 +137,30 @@ CREATE TABLE IF NOT EXISTS `cart`
 DROP TABLE IF EXISTS `review`;
 CREATE TABLE IF NOT EXISTS `review`
 (
-    `id`         int        NOT NULL AUTO_INCREMENT,
-    `uid`        int        NOT NULL,
-    `pid`        int        NOT NULL,
-    `name`       text       NOT NULL,
-    `msg`        mediumtext NOT NULL,
-    `rating`     int                 DEFAULT '0',
-    `created_at` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `id`         int          NOT NULL AUTO_INCREMENT,
+    `uid`        int          NOT NULL,
+    `pid`        int          NOT NULL,
+    `name`       varchar(255) NOT NULL DEFAULT '',
+    `msg`        varchar(255) NOT NULL DEFAULT '',
+    `rating`     int                   DEFAULT '0',
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user`
 (
-    `userid`            bigint UNSIGNED                                               NOT NULL AUTO_INCREMENT,
-    `full_name`         varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    `address`           varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `phone`             varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-    `status`            varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
-    `email`             varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `password`          varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-    `image`             LONGTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci              DEFAULT NULL,
-    `created_at`        timestamp                                                     NULL     DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`        timestamp                                                     NULL     DEFAULT CURRENT_TIMESTAMP,
+    `userid`     bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+    `full_name`  varchar(191)    NOT NULL,
+    `address`    varchar(191)             DEFAULT NULL,
+    `phone`      varchar(191)    NOT NULL,
+    `status`     varchar(191)    NOT NULL DEFAULT 'pending',
+    `email`      varchar(191)             DEFAULT NULL,
+    `password`   varchar(191)             DEFAULT NULL,
+    `image`      varchar(255)    NOT NULL DEFAULT '',
+    `created_at` timestamp       NULL     DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp       NULL     DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`userid`),
     UNIQUE KEY `users_email_unique` (`email`)
 );
@@ -182,11 +182,11 @@ CREATE TABLE IF NOT EXISTS `address`
 DROP TABLE IF EXISTS `faq`;
 CREATE TABLE IF NOT EXISTS `faq`
 (
-    `id`         int       NOT NULL AUTO_INCREMENT,
-    `question`   text      NOT NULL,
-    `answer`     text      NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `id`         int          NOT NULL AUTO_INCREMENT,
+    `question`   varchar(255) NOT NULL DEFAULT '',
+    `answer`     varchar(255) NOT NULL DEFAULT '',
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`)
 );
 
